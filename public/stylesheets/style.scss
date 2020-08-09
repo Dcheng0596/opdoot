@@ -2,8 +2,10 @@ body {
   height: 100%;
 }
 
-nav .input-group {
-  width: 300px;
+nav {
+  .input-group {
+    width: 300px;
+  }
 }
 
 main {
@@ -16,4 +18,3 @@ footer {
   left: 0;
   bottom: 0;
 }
-/*# sourceMappingURL=style.css.map */

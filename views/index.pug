@@ -1,5 +1,13 @@
-extends layout
+include common/head.pug
+include common/navbar.pug
+include common/footer.pug
 
-block content
-  h1= title
-  p Welcome to #{title}
+doctype html
+html(lang='en')
+  +head("Index")
+  body.bg-light
+    +navbar()
+    main.container
+      h1= title
+      p Welcome to #{title}
+    +footer()

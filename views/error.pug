@@ -1,6 +1,13 @@
-extends layout
+include common/head.pug
 
-block content
-  h1= message
-  h2= error.status
-  pre #{error.stack}
+doctype html
+html(lang='en')
+  +head("Error")
+  body
+    header
+      .container
+        .row
+          .col-md-12
+            h1= message
+            h2.text-danger= error.status
+            pre.text-danger #{error.stack}
