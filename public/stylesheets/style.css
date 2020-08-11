@@ -18,7 +18,6 @@ main {
 }
 
 .signup .social {
-  margin: 10px;
   -webkit-filter: drop-shadow(1px 1px 1px #EDEDED) drop-shadow(-1px 1px 1px #EDEDED) drop-shadow(1px -1px 1px #EDEDED) drop-shadow(-1px -1px 1px #EDEDED);
           filter: drop-shadow(1px 1px 1px #EDEDED) drop-shadow(-1px 1px 1px #EDEDED) drop-shadow(1px -1px 1px #EDEDED) drop-shadow(-1px -1px 1px #EDEDED);
 }

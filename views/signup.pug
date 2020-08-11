@@ -5,6 +5,18 @@ doctype html
 html(lang='en')
   +head(title)
   body.bg-light
+    #fb-root
+    script(async='' defer='' crossorigin='anonymous' src='https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v8.0' nonce='QlWtnKeX')
+    script.
+      window.fbAsyncInit = function() {
+      FB.init({
+      appId            : '334242877954395',
+      autoLogAppEvents : true,
+      xfbml            : true,
+      version          : 'v8.0'
+      });
+      };
+    script(async='' defer='' crossorigin='anonymous' src='https://connect.facebook.net/en_US/sdk.js')
     main
       .h-100.d-flex.align-items-center
         .card.bg-white.mx-auto.px-3.signup.shadow.border-0.text-center
@@ -27,9 +39,9 @@ html(lang='en')
               span.text-secondary OR
               span.d-inline-block.border-bottom.w-100.mb-2.ml-2
             span.text-secondary.small Sign in with
-            .d-flex.justify-content-center.socials.my-3
-              a(href="")
-                img.social(src="images/facebook.svg", alt="facebook" width="48" height="48")
-              a(href="")
-                img.social(src="images/google.svg", alt="google"  width="48" height="48")
+            .d-flex.justify-content-center.socials.mb-5.mt-4
+              a.mx-3(href="#")
+                img.social(src="images/facebook.svg", alt="facebook" width="48")
+              a.mx-3(href="#")
+                img.social(src="images/google.svg", alt="google"  width="48" )
     +footer
