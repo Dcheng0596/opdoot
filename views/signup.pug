@@ -5,22 +5,11 @@ doctype html
 html(lang='en')
   +head(title)
   body.bg-light
-    #fb-root
-    script(async='' defer='' crossorigin='anonymous' src='https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v8.0' nonce='QlWtnKeX')
-    script.
-      window.fbAsyncInit = function() {
-      FB.init({
-      appId            : '334242877954395',
-      autoLogAppEvents : true,
-      xfbml            : true,
-      version          : 'v8.0'
-      });
-      };
-    script(async='' defer='' crossorigin='anonymous' src='https://connect.facebook.net/en_US/sdk.js')
     main
       .h-100.d-flex.align-items-center
         .card.bg-white.mx-auto.px-3.signup.shadow.border-0.text-center
-          img.card-img-top.mt-5(src="images/logo.svg", alt="Opdoot" height="62")
+          a(href="/")
+            img.card-img-top.mt-5(src="images/logo.svg", alt="Opdoot" height="62")
           h4.h4.font-weight-bold.mt-3.text-dark Join Opdoot
           .card-body
             form.form-group(action="/signup" method='POST')
