@@ -2,18 +2,29 @@ body {
   height: 100%;
 }
 
-nav {
-  .input-group {
-    width: 300px;
+@media only screen and (min-width: 992px) {
+  nav {
+    .input-group {
+      width: 20rem !important;
+    }
   }
 }
 
 main {
-  height: calc(100vh - 100px);
+  height: calc(100vh - 60px);
+  min-height: calc(800px);
+}
+
+.signup {
+  width: 25rem;
+  .social {
+    margin: 10px;
+    filter: drop-shadow(1px 1px 1px #EDEDED) drop-shadow(-1px 1px 1px #EDEDED) drop-shadow(1px -1px 1px #EDEDED) drop-shadow(-1px -1px 1px #EDEDED);
+  }
 }
 
 footer {
-  height: 100px;
+  height: 60px;
   width: 100%;
   left: 0;
   bottom: 0;

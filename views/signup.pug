@@ -1,9 +1,35 @@
 include common/head.pug
-include common/navbar.pug
 include common/footer.pug
 
 doctype html
 html(lang='en')
-  +head("Index")
+  +head(title)
   body.bg-light
-    main.container
+    main
+      .h-100.d-flex.align-items-center
+        .card.bg-white.mx-auto.px-3.signup.shadow.border-0.text-center
+          img.card-img-top.mt-5(src="images/logo.svg", alt="Opdoot" height="62")
+          h4.h4.font-weight-bold.mt-3.text-dark Join Opdoot
+          .card-body
+            form.form-group(action="/signup" method='POST')
+              input(autocomplete="email" placeholder="Email" name='email', type='email').form-control.bg-light
+              input(autocomplete="username" placeholder="Username" name='username', type='text').form-control.bg-light.mt-4
+              input(autocomplete="password" placeholder="Password" name='password', type='password').form-control.bg-light.mt-4.mb-3
+              span.small.text-secondary By clicking on Sign Up you agree with our 
+                a(href="/terms") Terms of Service 
+              span.small and 
+                 a(href="/privacy") Privacy Policy
+              button().btn.btn-primary.w-100.mb-1.mt-3 Sign Up
+            span.small.text-secondary Have an account?  
+              a(href="/login") Log in
+            .third-party.d-flex.flex-row.mt-4
+              span.d-inline-block.border-bottom.w-100.mb-2.mr-2
+              span.text-secondary OR
+              span.d-inline-block.border-bottom.w-100.mb-2.ml-2
+            span.text-secondary.small Sign in with
+            .d-flex.justify-content-center.socials.my-3
+              a(href="")
+                img.social(src="images/facebook.svg", alt="facebook" width="48" height="48")
+              a(href="")
+                img.social(src="images/google.svg", alt="google"  width="48" height="48")
+    +footer
