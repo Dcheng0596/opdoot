@@ -1,5 +1,5 @@
-include common/head.pug
-include common/footer.pug
+include ../common/head.pug
+include ../common/footer.pug
 
 doctype html
 html(lang='en')
@@ -10,24 +10,22 @@ html(lang='en')
         .card.bg-white.mx-auto.px-3.signup.shadow.border-0.text-center
           a(href="/")
             img.card-img-top.mt-5(src="images/logo.svg", alt="Opdoot" height="62")
-          h4.h4.font-weight-bold.mt-3.text-dark Join Opdoot
+          h4.h4.font-weight-bold.mt-3.text-dark Welcome Back...
+          h6.h6.text-dark.text-muted We were waiting patiently for your return
           .card-body
-            form.form-group(action="/signup" method='POST')
+            form.form-group(action="/login" method='POST')
               input(autocomplete="email" placeholder="Email" name='email', type='email').form-control.bg-light
-              input(autocomplete="username" placeholder="Username" name='username', type='text').form-control.bg-light.mt-4
-              input(autocomplete="password" placeholder="Password" name='password', type='password').form-control.bg-light.mt-4.mb-3
-              span.small.text-secondary By clicking on Sign Up you agree with our 
-                a(href="/terms") Terms of Service 
-              span.small and 
-                 a(href="/privacy") Privacy Policy
+              input(autocomplete="password" placeholder="Password" name='password', type='password').form-control.bg-light.mt-4
+              span.small.d-block.text-left
+                a(href="/reset-password") Forgot password?
               button().btn.btn-primary.w-100.mb-1.mt-3 Sign Up
-            span.small.text-secondary Have an account?  
-              a(href="/login") Log in
+            span.small.text-secondary.mx-auto Dont have an account?  
+              a(href="/signup") Sign Up
             .third-party.d-flex.flex-row.mt-4
               span.d-inline-block.border-bottom.w-100.mb-2.mr-2
               span.text-secondary OR
               span.d-inline-block.border-bottom.w-100.mb-2.ml-2
-            span.text-secondary.small Sign in with
+            span.text-secondary.small Log in with
             .d-flex.justify-content-center.socials.mb-5.mt-4
               a.mx-3(href="#")
                 img.social(src="images/facebook.svg", alt="facebook" width="48")
