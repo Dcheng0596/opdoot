@@ -29,7 +29,7 @@ exports.validateUsername = (errors, username) => {
             errors["username"] = "Username can only contain letters and numbers";
             resolve(errors);
         } else if (!validator.isLength(username, {min: 3, max: 20})) {
-            errors["password"] = "Username must be between 3 and 20 characters long";
+            errors["username"] = "Username must be between 3 and 20 characters long";
             resolve(errors);
         } else {
             return models.User.findOne({
