@@ -1,5 +1,6 @@
 let models = require('../db/models');
 let validator = require('validator');
+const { Op } = require("sequelize");
 
 
 exports.validateEmail = (errors, email) => {
@@ -34,7 +35,9 @@ exports.validateUsername = (errors, username) => {
         } else {
             return models.User.findOne({
                 where: {
-                    username: username
+                    username: {
+                        [Op.iLike]: username
+                    }
                 }
             }).then(user => {
                 if (user !== null) {
