@@ -3,9 +3,9 @@ let models = require("../db/models");
 let bcrypt = require("bcrypt");
 const passport = require('passport');
 const setupPassport = require('../passport/setup')(passport);
-let flash = require('connect-flash');
 const {isEmpty} = require('lodash');
 const { validateUser } = require('../helper/validate');
+const { validateEmail, validateUsername, validatePassword } = require('../helper/ajaxValidate');
 
 exports.get_signup = function(req, res, next) {
     res.render('user/signup', { title: 'Sign up | Opdoot', formData: {}, errors: {}});
@@ -37,6 +37,31 @@ exports.post_signup = function(req, res, next) {
 	})
 }
 
+exports.validate_email = function(req, res, next) {
+    let errors = {};
+    validateEmail(errors, req.body.input).then(errors => {
+        res.json(errors);
+    })
+}
+
+exports.validate_username = function(req, res, next) {
+    let errors = {};
+    validateUsername(errors, req.body.input).then(errors => {
+        res.json(errors);
+    })
+}
+
+exports.validate_password = function(req, res, next) {
+    let errors = {};
+    validatePassword(errors, req.body.input);
+    res.json(errors);
+}
+
 exports.get_login = function(req, res, next) {
     res.render('user/login', { title: 'Log In | Opdoot' });
+}
+
+exports.get_logout = function(req, res, next) {
+    req.logout();
+    res.redirect('/');
 }
