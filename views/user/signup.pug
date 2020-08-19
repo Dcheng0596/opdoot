@@ -13,11 +13,11 @@ html(lang='en')
           h4.h4.font-weight-bold.mt-3.text-dark Join Opdoot
           .card-body
             form.form-group(action="/signup" method='POST')
-              input#email(autocomplete="email" placeholder="Email" name='email', type='email' value=formData.email).form-control.bg-light
+              input#email(placeholder="Email" name='email', type='email' value=formData.email).form-control.bg-light
               p#email-error.small.text-danger.text-left #{errors.email}
-              input#username(autocomplete="off" placeholder="Username" name='username', type='text' value=formData.username).form-control.bg-light.mt-4
+              input#username(placeholder="Username" name='username', type='text' value=formData.username).form-control.bg-light.mt-4
               p#username-error.small.text-danger.text-left #{errors.username}
-              input#password(autocomplete="password" placeholder="Password" name='password', type='password').form-control.bg-light.mt-4
+              input#password(placeholder="Password" name='password', type='password').form-control.bg-light.mt-4
               p#password-error.small.text-danger.text-left #{errors.password}
               span.small.text-secondary.mt-3 By clicking on Sign Up you agree with our 
                 a(href="/terms") Terms of Service 
