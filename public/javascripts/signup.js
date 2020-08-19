@@ -5,6 +5,7 @@ let submit = document.querySelector("button[disabled]")
 
 document.getElementById("email").addEventListener("input", function() {
     isValid('/signup_ajax/email', this.value).then(errors => {
+        console.log("TEST");
         let error = document.getElementById("email-error");
         let input = document.getElementById("email");
         if("email" in errors) {
@@ -13,7 +14,8 @@ document.getElementById("email").addEventListener("input", function() {
            submit.setAttribute("disabled", "disabled")
         } else {
             error.innerHTML = "";
-            input.classList.replace("error", "success");
+            input.classList.add("success");
+            input.classList.remove("error");
             if(document.getElementsByClassName("success").length == num_success) {
                 submit.removeAttribute("disabled")
             }
@@ -31,7 +33,8 @@ document.getElementById("username").addEventListener("input", function() {
            submit.setAttribute("disabled", "disabled")
         } else {
             error.innerHTML = "";
-            input.classList.replace("error", "success");
+            input.classList.add("success");
+            input.classList.remove("error");
             if(document.getElementsByClassName("success").length == num_success) {
                 submit.removeAttribute("disabled")
             }
@@ -49,7 +52,8 @@ document.getElementById("password").addEventListener("input", function() {
            submit.setAttribute("disabled", "disabled")
         } else {
             error.innerHTML = "";
-            input.classList.replace("error", "success");
+            input.classList.add("success");
+            input.classList.remove("error");
             if(document.getElementsByClassName("success").length == num_success) {
                 submit.removeAttribute("disabled")
             }
