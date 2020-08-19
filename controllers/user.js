@@ -61,6 +61,14 @@ exports.get_login = function(req, res, next) {
     res.render('user/login', { title: 'Log In | Opdoot' });
 }
 
+exports.post_login = function(req, res, next) { 
+	passport.authenticate('local', {
+		successRedirect: "/",
+		failureRedirect: "/login",
+		failureFlash: true
+	})(req, res, next);
+}
+
 exports.get_logout = function(req, res, next) {
     req.logout();
     res.redirect('/');

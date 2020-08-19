@@ -14,6 +14,7 @@ router.post('/signup_ajax/username', user.validate_username);
 router.post('/signup_ajax/password', user.validate_password);
 
 router.get('/login', user.get_login);
+router.post('/login', user.post_login);
 router.get('/logout', user.get_logout);
 
 module.exports = router;
