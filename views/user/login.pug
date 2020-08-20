@@ -14,11 +14,12 @@ html(lang='en')
           h6.h6.text-dark.text-muted We were waiting patiently for your return
           .card-body
             form.form-group(action="/login" method='POST')
+              p.small.text-danger #{errors}
               input(placeholder="Username or Email" name='username-email', type='text').form-control.bg-light
               input(placeholder="Password" name='password', type='password').form-control.bg-light.mt-4
               span.small.d-block.text-left
                 a(href="/reset-password") Forgot password?
-              button().btn.btn-primary.w-100.mb-1.mt-3 Log In
+              button(disabled).btn.btn-primary.w-100.mb-1.mt-3 Log In
             span.small.text-secondary.mx-auto Dont have an account?  
               a(href="/signup") Sign Up
             .third-party.d-flex.flex-row.mt-4
@@ -31,4 +32,4 @@ html(lang='en')
                 img.social(src="images/facebook.svg", alt="facebook" width="48")
               a.mx-3(href="#")
                 img.social(src="images/google.svg", alt="google"  width="48" )
-    +footer
+    +footer("login")

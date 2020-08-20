@@ -28,7 +28,7 @@ exports.post_signup = function(req, res, next) {
                   });
             }).catch(err => {
                 if(err.name == 'SequelizeUniqueConstraintError') {
-                    res.render('user/signup', { formData: req.body, errors: {email: 'Email or username has already been taken'}});
+                    res.render('user/signup', { formData: req.body, errors: { email: 'Email or username has already been taken' }});
                 } else {
                     next(err);
                 }
@@ -58,7 +58,8 @@ exports.validate_password = function(req, res, next) {
 }
 
 exports.get_login = function(req, res, next) {
-    res.render('user/login', { title: 'Log In | Opdoot' });
+    console.log(req.flash('message') + 'Q');
+    res.render('user/login', { title: 'Log In | Opdoot', errors: req.flash('error')});
 }
 
 exports.post_login = function(req, res, next) { 

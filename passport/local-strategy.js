@@ -19,14 +19,11 @@ module.exports = new LocalStrategy({
         },
     }).then(user => {
         if (user == null) {
-            req.flash('message', 'Email and/or password you enetered was incorrect')
-            return done(null, false)
+            return done(null, false, { message: 'Username/Email or password was incorrect'})
         } else if (user.password == null || user.password == undefined) {
-            req.flash('message', 'You must reset your password')
-            return done(null, false)
+            return done(null, false, { message: 'Reset your password'})
         } else if(!validPassword(user, password)) {
-            req.flash('message', 'Email and/or password you enetered was incorrect')
-            return done(null, false)
+            return done(null, false, { message: 'Username/Email or password was incorrect'})
         }
         return done(null, user);
     }).catch(err => {
