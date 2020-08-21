@@ -16,7 +16,7 @@ const validateCreateUserFields = (errors, req) => {
     if (validator.isEmpty(req.body.password))
 		errors["password"] = "Enter a password";
     
-    if (!validator.isAlphanumeric(req.body.username))
+    if (!validator.matches(req.body.username, "^[a-zA-Z0-9_]*$"))
 		errors["username"] = "Username can only contain letters and numbers";
     if (!validator.isLength(req.body.username, {min: 3, max: 20}))
         errors["username"] = "Username must be between 3 and 20 characters long";

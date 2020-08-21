@@ -26,7 +26,7 @@ exports.validateEmail = (errors, email) => {
 
 exports.validateUsername = (errors, username) => {
     return new Promise((resolve, reject) => {
-        if (!validator.isAlphanumeric(username)) {
+        if (!validator.matches(username, "^[a-zA-Z0-9_]*$")) {
             errors["username"] = "Username can only contain letters and numbers";
             resolve(errors);
         } else if (!validator.isLength(username, {min: 3, max: 20})) {
