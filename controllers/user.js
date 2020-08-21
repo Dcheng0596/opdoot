@@ -58,7 +58,6 @@ exports.validate_password = function(req, res, next) {
 }
 
 exports.get_login = function(req, res, next) {
-    console.log(req.flash('message') + 'Q');
     res.render('user/login', { title: 'Log In | Opdoot', errors: req.flash('error')});
 }
 
@@ -73,4 +72,16 @@ exports.post_login = function(req, res, next) {
 exports.get_logout = function(req, res, next) {
     req.logout();
     res.redirect('/');
+}
+
+exports.facebook = function(req, res, next) {
+    passport.authenticate('facebook', { scope : ['email'] })(req, res, next)
+}
+
+exports.facebook_cb = function(req, res, next) {
+    passport.authenticate('facebook', { 
+        successRedirect: "/",
+		failureRedirect: "/login"
+    })(req, res, next);
+
 }

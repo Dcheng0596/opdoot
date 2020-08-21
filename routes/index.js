@@ -17,4 +17,7 @@ router.get('/login', user.get_login);
 router.post('/login', user.post_login);
 router.get('/logout', user.get_logout);
 
+router.get('/auth/facebook', user.facebook);
+router.get('/auth/facebook/callback', user.facebook_cb);
+  
 module.exports = router;

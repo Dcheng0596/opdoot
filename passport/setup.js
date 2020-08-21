@@ -1,6 +1,7 @@
 let models = require('../db/models');
 
 let local_strategy = require('./local-strategy');
+let facebook_strategy = require('./facebook-strategy')
 
 module.exports = passport => {
     passport.serializeUser(function(user, done) {
@@ -19,4 +20,5 @@ module.exports = passport => {
 		})
     });
     passport.use(local_strategy);
+    passport.use(facebook_strategy);
 }
