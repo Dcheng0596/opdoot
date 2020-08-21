@@ -19,5 +19,8 @@ router.get('/logout', user.get_logout);
 
 router.get('/auth/facebook', user.facebook);
 router.get('/auth/facebook/callback', user.facebook_cb);
+
+router.get('/auth/google', user.google);
+router.get('/auth/google/callback', user.google_cb);
   
 module.exports = router;

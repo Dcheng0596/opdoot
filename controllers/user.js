@@ -84,5 +84,16 @@ exports.facebook_cb = function(req, res, next) {
         failureRedirect: "/signup",
         failureFlash: true
     })(req, res, next);
+}
 
+exports.google = function(req, res, next) {
+    passport.authenticate('google', { scope : ['email'] })(req, res, next)
+}
+
+exports.google_cb = function(req, res, next) {
+    passport.authenticate('google', { 
+        successRedirect: "/",
+        failureRedirect: "/signup",
+        failureFlash: true
+    })(req, res, next);
 }
