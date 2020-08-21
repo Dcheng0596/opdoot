@@ -13,6 +13,7 @@ html(lang='en')
           h4.h4.font-weight-bold.mt-3.text-dark Join Opdoot
           .card-body
             form.form-group(action="/signup" method='POST')
+              p.small.text-danger #{errors}
               input#email(placeholder="Email" name='email', type='email' value=formData.email).form-control.bg-light
               p#email-error.small.text-danger.text-left #{errors.email}
               input#username(placeholder="Username" name='username', type='text' value=formData.username).form-control.bg-light.mt-4

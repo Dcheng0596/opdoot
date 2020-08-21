@@ -8,7 +8,7 @@ const { validateUser } = require('../helper/validate');
 const { validateEmail, validateUsername, validatePassword } = require('../helper/ajaxValidate');
 
 exports.get_signup = function(req, res, next) {
-    res.render('user/signup', { title: 'Sign up | Opdoot', formData: {}, errors: {}});
+    res.render('user/signup', { title: 'Sign up | Opdoot', formData: {}, errors: req.flash('error')});
 }
 
 exports.post_signup = function(req, res, next) {
@@ -81,7 +81,8 @@ exports.facebook = function(req, res, next) {
 exports.facebook_cb = function(req, res, next) {
     passport.authenticate('facebook', { 
         successRedirect: "/",
-		failureRedirect: "/login"
+        failureRedirect: "/signup",
+        failureFlash: true
     })(req, res, next);
 
 }
