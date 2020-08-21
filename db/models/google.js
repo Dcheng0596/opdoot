@@ -3,7 +3,7 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class Facebook extends Model {
+  class Google extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -11,18 +11,18 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Facebook.belongsTo(models.User);
+      Google.belongsTo(models.User);
     }
   };
-  Facebook.init({
+  Google.init({
     id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.CHAR(50)
+      type: DataTypes.BIGINT
     }
   }, {
     sequelize,
-    modelName: 'Facebook',
+    modelName: 'Google',
   });
-  return Facebook;
+  return Google;
 };

@@ -5,7 +5,7 @@ module.exports = {
       id: {
         allowNull: false,
         primaryKey: true,
-        type: Sequelize.BIGINT
+        type: Sequelize.CHAR(50)
       },
       UserId: {
         type: Sequelize.INTEGER,

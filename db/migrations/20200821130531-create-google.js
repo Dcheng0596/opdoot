@@ -1,30 +1,18 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('CommentOpdoots', {
-      CommentId: {
+    await queryInterface.createTable('Googles', {
+      id: {
         allowNull: false,
-        type: Sequelize.INTEGER,
         primaryKey: true,
-        references: {
-          model: 'Comments',
-          key: 'id'
-        }
+        type: Sequelize.CHAR(50)
       },
       UserId: {
-        allowNull: false,
         type: Sequelize.INTEGER,
-        primaryKey: true,
         references: {
           model: 'Users',
           key: 'id'
-        }
-      },
-      OpdootTypeId: {
-        type: Sequelize.INTEGER,
-        references: {
-          model: 'OpdootTypes',
-          key: 'id'
+
         }
       },
       createdAt: {
@@ -38,6 +26,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('CommentOpdoots');
+    await queryInterface.dropTable('Googles');
   }
 };

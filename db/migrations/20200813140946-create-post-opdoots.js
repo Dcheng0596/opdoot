@@ -21,7 +21,6 @@ module.exports = {
         }
       },
       OpdootTypeId: {
-        allowNull: false,
         type: Sequelize.INTEGER,
         references: {
           model: 'OpdootTypes',
