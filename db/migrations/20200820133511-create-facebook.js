@@ -1,22 +1,16 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('PostTags', {
-      PostId: {
+    await queryInterface.createTable('Facebooks', {
+      id: {
         allowNull: false,
-        type: Sequelize.INTEGER,
         primaryKey: true,
-        references: {
-          model: 'Posts',
-          key: 'id'
-        }
+        type: Sequelize.BIGINT
       },
-      TagId: {
-        allowNull: false,
+      UserId: {
         type: Sequelize.INTEGER,
-        primaryKey: true,
         references: {
-          model: 'Tags',
+          model: 'Users',
           key: 'id'
         }
       },
@@ -31,6 +25,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('PostTags');
+    await queryInterface.dropTable('Facebooks');
   }
 };

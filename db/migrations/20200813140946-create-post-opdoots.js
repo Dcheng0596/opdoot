@@ -2,7 +2,7 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('PostOpdoots', {
-      postId: {
+      PostId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -11,7 +11,7 @@ module.exports = {
           key: 'id'
         }
       },
-      userId: {
+      UserId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -20,7 +20,7 @@ module.exports = {
           key: 'id'
         }
       },
-      opdootTypeId: {
+      OpdootTypeId: {
         allowNull: false,
         type: Sequelize.INTEGER,
         references: {

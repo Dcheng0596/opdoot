@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       User.hasMany(models.Post),
+      User.hasOne(models.Facebook),
       User.belongsToMany(models.Post, { through: models.PostOpdoot })
       User.belongsToMany(models.Post, { through: models.CommentOpdoot })
       User.belongsToMany(models.Comment, { through: models.UserComment });
@@ -29,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
       unique: true
     },
     password: {
-      allowNull: false,
       type: DataTypes.STRING
     },
     totalOpdoots: {
@@ -41,6 +41,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
       type: DataTypes.INTEGER
+    },
+    profilePicture: {
+      allowNull: false,
+      defaultValue: "file-location",
+      type: DataTypes.STRING
     }
   }, {
     sequelize,

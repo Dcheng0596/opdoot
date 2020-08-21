@@ -19,7 +19,6 @@ module.exports = {
         unique: true
       },
       password: {
-        allowNull: false,
         type: Sequelize.STRING
       },
       totalOpdoots: {
@@ -31,6 +30,11 @@ module.exports = {
         allowNull: false,
         defaultValue: 0,
         type: Sequelize.INTEGER
+      },
+      profilePicture: {
+        allowNull: false,
+        defaultValue: "file-location",
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
