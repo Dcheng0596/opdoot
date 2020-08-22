@@ -10,7 +10,7 @@ html(lang='en')
         .card.bg-white.mx-auto.px-3.signup.shadow.border-0.text-center
           a(href="/")
             img.card-img-top.mt-5(src="images/logo.svg", alt="Opdoot" height="62")
-          h4.h4.font-weight-bold.mt-3.text-dark Join Opdoot
+          h4.font-weight-bold.mt-3.text-dark Join Opdoot
           .card-body
             form.form-group(action="/signup" method='POST')
               p.small.text-danger #{errors}
@@ -21,12 +21,12 @@ html(lang='en')
               input#password(placeholder="Password" name='password', type='password').form-control.bg-light.mt-4
               p#password-error.small.text-danger.text-left #{errors.password}
               span.small.text-secondary.mt-3 By clicking on Sign Up you agree with our 
-                a(href="/terms") Terms of Service 
+                a.card-link(href="/terms") Terms of Service 
               span.small and 
-                 a(href="/privacy") Privacy Policy
+                 a.card-link(href="/privacy") Privacy Policy
               button.btn.btn-primary.w-100.mb-1.mt-3(disabled) Sign Up
             span.small.text-secondary Have an account?  
-              a(href="/login") Log in
+              a.card-link(href="/login") Log in
             .third-party.d-flex.flex-row.mt-4
               span.d-inline-block.border-bottom.w-100.mb-2.mr-2
               span.text-secondary OR

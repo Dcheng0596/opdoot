@@ -3,6 +3,7 @@ var router = express.Router();
 
 let index = require('../controllers/index');
 let user = require('../controllers/user');
+let post = require('../controllers/post')
 
 router.get('/', index.get_index);
 
@@ -22,5 +23,8 @@ router.get('/auth/facebook/callback', user.facebook_cb);
 
 router.get('/auth/google', user.google);
 router.get('/auth/google/callback', user.google_cb);
+
+router.get('/upload', post.get_upload);
+
   
 module.exports = router;

@@ -13,6 +13,8 @@ mixin navbar()
               button.btn.btn-light.border(type='submit')
                 img.px-2(src='images/search.svg' alt="Search")
         ul.navbar-nav.mr-2
+          if user
+            a.nav-link(href='/upload') Post
           li.nav-item
             a.nav-link(href='#') Opdoot
           li.nav-item

@@ -1,0 +1,22 @@
+include ../common/head.pug
+include ../common/navbar.pug
+include ../common/footer.pug
+
+doctype html
+html(lang='en')
+  +head(title)
+  body.bg-light
+    +navbar()
+    main
+      .h-100.d-flex.align-items-center
+        .card.upload.bg-white.mx-auto.shadow.border-0
+          form.form-group(action="/login" method='POST')
+            .p-3
+              input.title.bg-white.form-control(placeholder="Your amazing title" maxlength="100" autocomplete="off" type="text", name="title")
+            .drop-area.bg-light
+              img.border-0.d-none
+            .card-body.px-3
+              h5.h5 Tags
+              textarea.tags.form-control.my-3(placeholder="E.g. #your #amazing #tags" maxlength="200" type="text", name="tags")
+              button.btn.btn-primary.w-100.mb-1.mt-3(disabled) Post
+    +footer("upload")
