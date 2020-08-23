@@ -22,6 +22,57 @@ main {
   .signup .social {
     filter: drop-shadow(1px 1px 1px #EDEDED) drop-shadow(-1px 1px 1px #EDEDED) drop-shadow(1px -1px 1px #EDEDED) drop-shadow(-1px -1px 1px #EDEDED); }
 
+.upload {
+  width: 25rem; }
+  .upload .title {
+    padding: 0;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    height: 2rem;
+    font-size: 1.2rem; }
+    .upload .title:focus {
+      box-shadow: none;
+      border-color: black; }
+  .upload .tags {
+    resize: none;
+    height: 6rem; }
+    .upload .tags:focus {
+      box-shadow: none;
+      border-color: black; }
+
+@keyframes change-color {
+  from {
+    background-color: gainsboro; }
+  to {
+    background-color: black; } }
+  .upload #drop-area {
+    width: 400px;
+    height: 300px;
+    background-color: gainsboro; }
+  .upload .drop-border {
+    width: 380px;
+    height: 280px;
+    border: 2px dashed grey;
+    border-radius: 10px;
+    color: grey;
+    pointer-events: none; }
+  .upload .drag-enter {
+    animation: change-color .5s ease-out 0s normal;
+    animation-fill-mode: both; }
+  .upload .drag-leave {
+    animation: change-color .5s ease-out 0s reverse;
+    animation-fill-mode: both; }
+  .upload .dropped {
+    background-color: black !important; }
+  .upload input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: 400px;
+    height: 300px;
+    cursor: pointer; }
+
 footer {
   height: 60px;
   width: 100%;

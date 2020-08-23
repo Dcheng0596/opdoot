@@ -18,7 +18,7 @@ html(lang='en')
               p#email-error.small.text-danger.text-left #{errors.email}
               input#username(placeholder="Username" name='username', type='text' value=formData.username).form-control.bg-light.mt-4
               p#username-error.small.text-danger.text-left #{errors.username}
-              input#password(placeholder="Password" name='password', type='password').form-control.bg-light.mt-4
+              input#password(placeholder="Password" autocomplete="off" name='password', type='password').form-control.bg-light.mt-4
               p#password-error.small.text-danger.text-left #{errors.password}
               span.small.text-secondary.mt-3 By clicking on Sign Up you agree with our 
                 a.card-link(href="/terms") Terms of Service 

@@ -37,6 +37,79 @@ main {
   }
 }
 
+$image-height: 300px;
+$image-width: 400px;
+
+.upload {
+  width: 25rem;
+  .title {
+    padding: 0;
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    height: 2rem;
+    font-size: 1.2rem;
+    &:focus {
+      box-shadow: none;
+      border-color: black;
+    }
+  }
+
+  .tags {
+    resize: none;
+    height: 6rem;
+
+    &:focus {
+      box-shadow: none;
+      border-color: black;
+    }
+  }
+
+  @keyframes change-color {
+    from {background-color: gainsboro;}
+    to {background-color: black;}
+  }
+  
+  #drop-area {
+    width: $image-width;
+    height: $image-height;
+    background-color: gainsboro;
+  }
+
+  .drop-border {
+    width: $image-width - 20px;
+    height: $image-height - 20px;
+    border: 2px dashed grey;
+    border-radius: 10px;
+    color: grey;
+    pointer-events: none;
+  }
+
+  .drag-enter {
+    animation: change-color .5s ease-out 0s normal;
+    animation-fill-mode: both;
+  }
+
+  .drag-leave {
+    animation: change-color .5s ease-out 0s reverse;
+    animation-fill-mode: both;
+  }
+
+  .dropped {
+    background-color: black !important;
+  }
+
+  input[type="file"] {
+    position: absolute;
+    opacity: 0;
+    width: $image-width;
+    height: $image-height;
+    cursor: pointer; 
+  }
+
+}
+
 footer {
   height: 60px;
   width: 100%;
