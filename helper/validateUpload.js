@@ -4,7 +4,8 @@ exports.validateUpload = (errors, req) => {
         errors["error"] = "Choose a file to upload"
     } else if(req.file.mimetype != "image/jpeg" && req.file.mimetype != "image/png") {
         errors["error"] = "File must be of type JPEG or PNG"
-    } else if(req.file.size > 20971520) {
+    } else if(req.file.size > 5242880) {
+        //Files get compressed to a max of 5MB on the client
         errors["error"] = "File must be 20MB or less"
     }
     if(req.body.title) {

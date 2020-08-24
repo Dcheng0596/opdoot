@@ -9,6 +9,7 @@ function previewImage(file) {
     let image = new Image();
     reader.onload = function(e)  {
         image.src = e.target.result;
+        image.hidden = true;
         while (dropArea.hasChildNodes()) {
             dropArea.removeChild(dropArea.childNodes[0]);
         }
@@ -21,6 +22,7 @@ function previewImage(file) {
         } else {
             this.style.height = "100%";
         }
+        image.hidden = false;
     }
     dropArea.classList.add("dropped")
     form.set('file', file);
@@ -57,6 +59,7 @@ dropArea.addEventListener("drop", function(e) {
     if((file.getAsFile().type == "image/jpeg" || file.getAsFile().type == "image/jpeg") &&
        file.getAsFile().size <= maxFileSize) {
         previewImage(file.getAsFile());
+        handleImageUpload(file.getAsFile());
         enableSubmit();
         return;
     }
@@ -89,8 +92,9 @@ input.addEventListener("change", function() {
         return
     }
     if(file.type == "image/jpeg" || file.type == "image/jpeg" ||
-       file.getAsFile().size <= maxFileSize) {
+       file.size <= maxFileSize) {
         previewImage(file);
+        handleImageUpload(file);
         enableSubmit();
         return;
     }
@@ -130,3 +134,25 @@ submit.addEventListener("click", async function() {
         console.log(error)
     }
 });
+
+async function handleImageUpload(file) {
+ 
+    const imageFile = file;
+    console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
+    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
+   
+    const options = {
+      maxSizeMB: 5,
+      useWebWorker: true
+    }
+    try {
+      const compressedFile = await imageCompression(imageFile, options);
+      console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
+      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
+      previewImage(compressedFile);
+      //await uploadToServer(compressedFile); // write your own logic
+    } catch (error) {
+      console.log(error);
+    }
+   
+  }
