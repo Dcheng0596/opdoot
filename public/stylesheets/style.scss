@@ -108,6 +108,15 @@ $image-width: 400px;
     cursor: pointer; 
   }
 
+  #tags::-webkit-scrollbar {
+    display: none;
+  }
+
+  #tags {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
 }
 
 footer {

@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) => {
     id: {
       allowNull: false,
       primaryKey: true,
-      type: DataTypes.BIGINT
+      type: DataTypes.CHAR(50)
     }
   }, {
     sequelize,

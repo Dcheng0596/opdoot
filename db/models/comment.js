@@ -19,6 +19,10 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: '',
       type: DataTypes.CHAR(1000)
+    },
+    username: {
+      allowNull: false,
+      type: DataTypes.STRING
     }
   }, {
     sequelize,

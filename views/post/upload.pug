@@ -10,19 +10,21 @@ html(lang='en')
     main
       .h-100.d-flex.align-items-center
         .card.upload.bg-white.mx-auto.shadow.border-0
-          .p-3
+          .px-3.pt-3.pb-1
             input#title.title.bg-white.form-control(placeholder="Your amazing title" maxlength="100" autocomplete="off" type="text", name="title")
+            span#title-char.d-block.small.text-right 0/100
           #drop-area.d-flex.justify-content-center.align-items-center
             .drop-border.p-2
               .d-flex.flex-column.justify-content-center.align-items-center.h-75
-                img.m-3(src="images/upload.svg" width="50")
-                h5.h5 Drop your image here
-                h5.h5 or
+                img.m-4(src="images/upload.svg" width="50")
+                h5.h5 Drop your image here 
+                h5.h5 Or 
                 h5.h5 Click to choose
               span.small.d-flex.flex-column.justify-content-end.align-items-center.h-25 File must be of type JPEG or PNG and must be 20MB or less
             input#input-file(type="file", name="file")
           .card-body.px-3
-            h5.h5 Tags
-            textarea#tags.tags.form-control.my-3(placeholder="E.g. #your #amazing #tags" maxlength="200" type="text", name="tags")
+            p#error.small.text-danger
+            textarea#tags.tags.form-control.mt-2(placeholder="E.g. #your #amazing #tags" maxlength="200" type="text", name="tags")
+            span#tags-char.d-block.small.text-right.mb-1 0/200
             button#submit.btn.btn-primary.w-100.mb-1.mt-3(disabled) Post
     +footer("upload")

@@ -72,6 +72,11 @@ main {
     width: 400px;
     height: 300px;
     cursor: pointer; }
+  .upload #tags::-webkit-scrollbar {
+    display: none; }
+  .upload #tags {
+    -ms-overflow-style: none;
+    scrollbar-width: none; }
 
 footer {
   height: 60px;

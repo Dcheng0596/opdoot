@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 
+let multer  = require('multer');
+let upload = multer();
+
 let index = require('../controllers/index');
 let user = require('../controllers/user');
 let post = require('../controllers/post')
@@ -25,6 +28,7 @@ router.get('/auth/google', user.google);
 router.get('/auth/google/callback', user.google_cb);
 
 router.get('/upload', post.get_upload);
+router.post('/upload', upload.single('file'), post.post_upload);
 
   
 module.exports = router;

@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       User.hasMany(models.Post),
       User.hasOne(models.Facebook),
+      User.hasOne(models.Google),
       User.belongsToMany(models.Post, { through: models.PostOpdoot })
       User.belongsToMany(models.Post, { through: models.CommentOpdoot })
       User.belongsToMany(models.Comment, { through: models.UserComment });
