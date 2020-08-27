@@ -28,6 +28,16 @@ function previewImage(file) {
     form.set('file', file);
 };
 
+function showSpinner() {
+    let spinner = document.createElement("div");
+    spinner.classList.add("spinner-border");
+    spinner.classList.add("text-light");
+    while (dropArea.hasChildNodes()) {
+        dropArea.removeChild(dropArea.childNodes[0]);
+    }
+    dropArea.appendChild(spinner);
+}
+
 function enableSubmit() {
     if(form.has('file')) {
         submit.removeAttribute("disabled");
@@ -47,20 +57,18 @@ function leaveAnimation() {
 }
 
 
-
 dropArea.addEventListener("drop", function(e) {
     e.preventDefault();
     let file = e.dataTransfer.items[0];
     if(file == null) {
-        submit.setAttribute("disabled", "disabled")
+        submit.setAttribute("disabled", "disabled");
         return;
     }
     console.log(file.getAsFile().size + " " + maxFileSize);
-    if((file.getAsFile().type == "image/jpeg" || file.getAsFile().type == "image/jpeg") &&
+    if((file.getAsFile().type == "image/jpeg" || file.getAsFile().type == "image/png") &&
        file.getAsFile().size <= maxFileSize) {
-        previewImage(file.getAsFile());
+        showSpinner();
         handleImageUpload(file.getAsFile());
-        enableSubmit();
         return;
     }
     leaveAnimation();
@@ -91,11 +99,10 @@ input.addEventListener("change", function() {
         submit.setAttribute("disabled", "disabled");
         return
     }
-    if(file.type == "image/jpeg" || file.type == "image/jpeg" ||
+    if(file.type == "image/jpeg" || file.type == "image/png" ||
        file.size <= maxFileSize) {
-        previewImage(file);
+        showSpinner();
         handleImageUpload(file);
-        enableSubmit();
         return;
     }
     leaveAnimation();
@@ -118,6 +125,8 @@ document.getElementById("tags").addEventListener("input", function() {
 });
 
 submit.addEventListener("click", async function() {
+    submit.setAttribute("disabled", "disabled");
+
     for(var pair of form.entries()) {
         console.log(pair[0]+ ', '+ pair[1]); 
      }
@@ -136,21 +145,20 @@ submit.addEventListener("click", async function() {
 });
 
 async function handleImageUpload(file) {
- 
+    submit.setAttribute("disabled", "disabled");
+
     const imageFile = file;
     console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
     console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
    
     const options = {
-      maxSizeMB: 5,
+      maxSizeMB: 10,
       useWebWorker: true
     }
     try {
       const compressedFile = await imageCompression(imageFile, options);
-      console.log('compressedFile instanceof Blob', compressedFile instanceof Blob); // true
-      console.log(`compressedFile size ${compressedFile.size / 1024 / 1024} MB`); // smaller than maxSizeMB
       previewImage(compressedFile);
-      //await uploadToServer(compressedFile); // write your own logic
+      enableSubmit();
     } catch (error) {
       console.log(error);
     }
