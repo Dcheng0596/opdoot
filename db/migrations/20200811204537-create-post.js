@@ -10,7 +10,13 @@ module.exports = {
       },
       file: {
         allowNull: false,
+        unique: true,
         type: Sequelize.STRING
+      },
+      title: {
+        allowNull: false,
+        defaultValue: "",
+        type: Sequelize.CHAR(100)
       },
       UserId: {
         type: Sequelize.INTEGER,
@@ -36,6 +42,11 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      public: {
+        allowNull: false,
+        defaultValue: true,
+        type: Sequelize.BOOLEAN
       }
     });
   },

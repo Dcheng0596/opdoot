@@ -20,7 +20,13 @@ module.exports = (sequelize, DataTypes) => {
   Post.init({
     file: {
       allowNull: false,
+      unique: true,
       type: DataTypes.STRING
+    },
+    title: {
+      allowNull: false,
+      defaultValue: "",
+      type: DataTypes.CHAR(100)
     },
     opdoots: {
       allowNull: false,
@@ -31,6 +37,11 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: 0,
       type: DataTypes.INTEGER
+    },
+    public: {
+      allowNull: false,
+      defaultValue: true,
+      type: DataTypes.BOOLEAN
     }
   }, {
     sequelize,
