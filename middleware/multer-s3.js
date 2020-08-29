@@ -4,7 +4,6 @@ const multerS3 = require('multer-s3');
 const { AWS_SECRET_ACCESS, AWS_ACCESS_KEY, S3_BUCKET_NAME} = require('../config/amazon');
 
 const nanoId = require('nanoid').nanoid(11);
-const { fileFilter } = require('../helper/validate-upload');
 
 aws.config.update({
     secretAccessKey: AWS_SECRET_ACCESS,
@@ -15,7 +14,6 @@ aws.config.update({
 const s3 = new aws.S3();
 
 const upload = multer({
-    fileFilter: fileFilter,
     storage: multerS3({
         s3: s3,
         bucket: S3_BUCKET_NAME,
