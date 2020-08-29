@@ -1,5 +1,6 @@
+const upload = require('../middleware/multer-s3');
 
-const { validateUpload } = require('../helper/validateUpload');
+
 
 exports.get_upload = function(req, res, next) {
     //if(req.user == null) {
@@ -9,14 +10,27 @@ exports.get_upload = function(req, res, next) {
 }
 
 exports.post_upload = function(req, res, next) {
-    let errors = {};
-    
-    validateUpload(errors, req);
-    console.log(req.file);
-    console.log(req.body);
-    console.log(errors);
-    res.json({ 
-        redirect: "/upload",
-        error: errors.error
-    });
+    upload.single('file')(req, res, function(err) {
+        if(err) {
+            res.status(500);
+            res.render('error');
+            return;
+        }
+        if(req.body.title) {
+            if(req.body.title.length > 100) {
+                res.status(500);
+                res.render('error');
+                return;
+            } 
+        }     
+        if(req.body.tags) {
+            if(req.body.tags.length > 200) {
+                res.status(500);
+                res.render('error');
+                return;
+            } 
+        }     
+        res.redirect('/');
+        
+    })
 }

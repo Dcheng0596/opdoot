@@ -1,4 +1,4 @@
-let models = require('../db/models');
+let models = require('../../db/models');
 
 let local_strategy = require('./local-strategy');
 let facebook_strategy = require('./facebook-strategy')

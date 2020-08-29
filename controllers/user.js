@@ -2,10 +2,10 @@
 let models = require("../db/models");
 let bcrypt = require("bcrypt");
 const passport = require('passport');
-const setupPassport = require('../passport/setup')(passport);
+const setupPassport = require('../middleware/passport/setup')(passport);
 const {isEmpty} = require('lodash');
 const { validateUser } = require('../helper/validate');
-const { validateEmail, validateUsername, validatePassword } = require('../helper/ajaxValidate');
+const { validateEmail, validateUsername, validatePassword } = require('../helper/ajax-validate');
 
 exports.get_signup = function(req, res, next) {
     res.render('user/signup', { title: 'Sign up | Opdoot', formData: {}, errors: req.flash('error')});

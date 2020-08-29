@@ -9,5 +9,8 @@ html(lang='en')
         .row
           .col-md-12
             h1= message
-            h2.text-danger= error.status
-            pre.text-danger #{error.stack}
+            if error
+              h2.text-danger= error.status
+              pre.text-danger #{error.stack}
+            else
+              h2.text-danger Something went wrong

@@ -1,9 +1,9 @@
-let GoogleStrategy = require('passport-google-oauth20').Strategy;
-let models = require('../db/models');
-let db = require('../db/models/index');
-const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = require('../config/google')
+let FacebookStrategy = require('passport-facebook').Strategy;
+let models = require('../../db/models');
+let db = require('../../db/models/index');
+const { FACEBOOK_APP_ID, FACEBOOK_APP_SECRET } = require('../../config/facebook')
 
-// Create Google profile if one doesnt exist
+// Create Facebook profile if one doesnt exist
 // If one was created or if existing one is not linked to an account
 // Then check if a user exists with the same email as the profile
 // If no user has that email create a new user and link it to the profile
@@ -11,22 +11,22 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = require('../config/google')
 // If user has a already linked then send flash error message 
 // Otherwise link user with profile
 // If one was not created and it is linked then sign into that account
-module.exports = new GoogleStrategy({
-    clientID: GOOGLE_CLIENT_ID,
-    clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback",
+module.exports = new FacebookStrategy({
+    clientID: FACEBOOK_APP_ID,
+    clientSecret: FACEBOOK_APP_SECRET,
+    callbackURL: "http://localhost:3000/auth/facebook/callback",
     profileFields: ['id', 'emails']
   },
   async function(accessToken, refreshToken, profile, cb) {
       let t;
     try {
         t = await db.sequelize.transaction();
-        let [gglUser, built] = await models.Google.findOrBuild({
+        let [fbUser, built] = await models.Facebook.findOrBuild({
             where: { id: profile.id },
             transaction: t 
         });
 
-        if(built || gglUser.UserId == null) {
+        if(built || fbUser.UserId == null) {
             let email = profile.emails[0].value;
             let sanitizedEmail = email.split('@')[0].replace(/[^a-zA-Z0-9_]/gi, '');
             let username = sanitizedEmail.substring(0, 16) + Math.floor(Math.random() * (10000 - 1000) + 1000);
@@ -38,15 +38,15 @@ module.exports = new GoogleStrategy({
                 transaction: t 
             });
             if(created) {
-                gglUser.UserId = user.id;
-                await gglUser.save({ transaction: t });
+                fbUser.UserId = user.id;
+                await fbUser.save({ transaction: t });
                 await t.commit();
                 cb(null, user);
             } else {
-                let linkedGglUser = await models.Google.findOne({ where: { UserId: user.id } });
-                if( linkedGglUser == null) {
-                    gglUser.UserId = user.id;
-                    await gglUser.save({ transaction: t });
+                let linkedFbUser = await models.Facebook.findOne({ where: { UserId: user.id } });
+                if( linkedFbUser == null) {
+                    fbUser.UserId = user.id;
+                    await fbUser.save({ transaction: t });
                     await t.commit();
                     cb(null, user);
                 } else {
@@ -55,7 +55,7 @@ module.exports = new GoogleStrategy({
                 }
             }
         } else {
-            let user = await models.User.findByPk(gglUser.UserId);
+            let user = await models.User.findByPk(fbUser.UserId);
             await t.commit();
             cb(null, user)
         }

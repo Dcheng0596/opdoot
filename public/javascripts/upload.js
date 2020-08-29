@@ -135,10 +135,8 @@ submit.addEventListener("click", async function() {
             method: 'POST',
             body: form
         });
-        const resJson = await response.json();
-        console.log(resJson);
-        location.href = resJson.redirect;
-        document.getElementById("error").innerHTML = resJson.error;
+        const resHTML = await response.text();
+        document.write(resHTML);
     } catch (error) {
         console.log(error)
     }

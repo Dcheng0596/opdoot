@@ -1,6 +1,6 @@
 let LocalStrategy = require('passport-local').Strategy;
 let bcrypt = require('bcrypt');
-let models = require('../db/models');
+let models = require('../../db/models');
 const { Op } = require("sequelize");
 
 const validPassword = (user, password) => {
