@@ -1,4 +1,5 @@
 const err = new Error("Invalid Upload");
+const validator = require('validator');
 
 exports.fileFilter = async (req, file, cb) => {
     if(req.user == null) {
@@ -19,4 +20,14 @@ exports.fileFilter = async (req, file, cb) => {
         return;
     }
     cb(null, true);
+};
+
+exports.processTags = tagsString => {
+    if(!tagsString) {
+        return [];
+    }
+    let tags = tagsString.split(' ');
+    tags.forEach(tag => tag = tag.trim());
+    let filteredTags = tags.filter(tag => validator.isAlphanumeric(tag));
+    return filteredTags;
 };

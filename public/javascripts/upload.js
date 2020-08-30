@@ -115,13 +115,13 @@ let tagsMaxChar = 200
 let titleChar = document.getElementById("title-char");
 document.getElementById("title").addEventListener("input", function() {
     form.set('title', this.value);
-    titleChar.innerHTML = this.value.length + "/" + titleMaxChar;
+    titleChar.innerText = this.value.length + "/" + titleMaxChar;
 });
 
 let tagsChar = document.getElementById("tags-char");
 document.getElementById("tags").addEventListener("input", function() {
     form.set('tags', this.value);
-    tagsChar.innerHTML = this.value.length + "/" + tagsMaxChar;
+    tagsChar.innerText = this.value.length + "/" + tagsMaxChar;
 });
 
 submit.addEventListener("click", async function() {

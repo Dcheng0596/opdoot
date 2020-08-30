@@ -10,7 +10,7 @@ module.exports = {
       },
       name: {
         allowNull: false,
-        type: Sequelize.CHAR(32)
+        type: Sequelize.CHAR(30)
       },
       count: {
         allowNull: false,

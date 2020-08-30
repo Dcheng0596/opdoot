@@ -37,7 +37,7 @@ exports.validateUser = (errors, req) => {
     }
 		return models.User.findOne({
 			where: {
-				email: validator.trim(req.body.email)
+				email: req.body.email.trim()
 			}
 		}).then(user => {
 			if (user !== null) {

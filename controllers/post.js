@@ -1,13 +1,15 @@
 const upload = require('../middleware/multer-s3');
+const { processTags } = require('../helper/validate-upload');
 let models = require('../db/models');
 let db = require('../db/models/index');
 
 exports.get_upload = function(req, res, next) {
-    //if(req.user == null) {
-    //    res.redirect()
-    //}
+    if(req.user == null) {
+        res.redirect()
+    }
     res.render('post/upload', { title: 'Upload an image | Opdoot', user: req.user});
 }
+
 
 exports.post_upload = function(req, res, next) {
     upload.single('file')(req, res, async function(err) {
@@ -28,17 +30,27 @@ exports.post_upload = function(req, res, next) {
                 res.status(500);
                 res.render('error');
                 return;
-            } 
+            }
         }
         let t;
         try {
             t = await db.sequelize.transaction();
-            const post = await models.Post.create({
+            let post = await models.Post.create({
                 file: req.file.key,
                 title: req.body.title,
-                UserId: req.user.id,
-              }, { transaction: t });  
-
+            }, { transaction: t });
+            await req.user.addPost(post, { transaction: t});
+            for(tag of processTags(req.body.tags)) {
+                let [newTag, created] = await models.Tag.findOrCreate({
+                    where: {
+                        name: tag
+                    }, transaction: t
+                })
+                if(!created) {
+                    await newTag.increment('count', { transaction: t })
+                }
+                await post.addTag(newTag, { transaction: t });
+            };
             await t.commit();
         } catch (error) {
             if(t) {
@@ -49,8 +61,6 @@ exports.post_upload = function(req, res, next) {
             console.log(error);
             return;
         }
-        console.log("KEY " + req.file.key);
         res.redirect('/');
-        
     })
 }

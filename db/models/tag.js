@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   Tag.init({
     name: {
       allowNull: false,
-      type: DataTypes.CHAR(32)
+      type: DataTypes.CHAR(30)
     },
     count: {
       allowNull: false,
