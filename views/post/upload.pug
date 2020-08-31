@@ -24,8 +24,9 @@ html(lang='en')
             input#input-file(type="file", name="file")
           .card-body.px-3
             p#error.small.text-danger
-            h5.h5 Tags
-            textarea#tags.tags.form-control.mt-2(placeholder="E.g. your amazing tags" maxlength="200" type="text", name="tags")
+            textarea#description.form-control.mt-2(placeholder="Write a description" maxlength="200" type="text", name="description")
+            span#description-char.d-block.small.text-right.mb-1 0/200
+            textarea#tags.form-control.mt-2(placeholder="Tags E.g. your amazing tags" maxlength="200" type="text", name="tags")
             span#tags-char.d-block.small.text-right.mb-1 0/200
             button#submit.btn.btn-primary.w-100.mb-1.mt-3(disabled) Post
     +footer("upload")

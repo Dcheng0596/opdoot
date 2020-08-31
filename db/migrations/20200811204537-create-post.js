@@ -18,6 +18,11 @@ module.exports = {
         defaultValue: "",
         type: Sequelize.CHAR(100)
       },
+      description: {
+        allowNull: false,
+        defaultValue: "",
+        type: Sequelize.CHAR(200)
+      },
       UserId: {
         type: Sequelize.INTEGER,
         references: {

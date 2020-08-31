@@ -5,7 +5,7 @@ let db = require('../db/models/index');
 
 exports.get_upload = function(req, res, next) {
     if(req.user == null) {
-        res.redirect()
+        res.redirect('/')
     }
     res.render('post/upload', { title: 'Upload an image | Opdoot', user: req.user});
 }
@@ -32,12 +32,20 @@ exports.post_upload = function(req, res, next) {
                 return;
             }
         }
+        if(req.body.description) {
+            if(req.body.description.length > 200) {
+                res.status(500);
+                res.render('error');
+                return;
+            }
+        }
         let t;
         try {
             t = await db.sequelize.transaction();
             let post = await models.Post.create({
                 file: req.file.key,
                 title: req.body.title,
+                description: req.body.description,
             }, { transaction: t });
             await req.user.addPost(post, { transaction: t});
             for(tag of processTags(req.body.tags)) {
@@ -63,4 +71,8 @@ exports.post_upload = function(req, res, next) {
         }
         res.redirect('/');
     })
+}
+
+exports.get_post = function(req, res, next) {
+    res.render('post/post', { title: 'Post | Opdoot', user: req.user});
 }

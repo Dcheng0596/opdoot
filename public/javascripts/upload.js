@@ -110,12 +110,19 @@ input.addEventListener("change", function() {
 });
 
 let titleMaxChar = 100
+let descriptionMaxChar = 200
 let tagsMaxChar = 200
 
 let titleChar = document.getElementById("title-char");
 document.getElementById("title").addEventListener("input", function() {
     form.set('title', this.value);
     titleChar.innerText = this.value.length + "/" + titleMaxChar;
+});
+
+let descriptionChar = document.getElementById("description-char");
+document.getElementById("description").addEventListener("input", function() {
+    form.set('description', this.value);
+    descriptionChar.innerText = this.value.length + "/" + descriptionMaxChar;
 });
 
 let tagsChar = document.getElementById("tags-char");

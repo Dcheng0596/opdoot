@@ -28,6 +28,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "",
       type: DataTypes.CHAR(100)
     },
+    description: {
+      allowNull: false,
+      defaultValue: "",
+      type: DataTypes.CHAR(200)
+    },
     opdoots: {
       allowNull: false,
       defaultValue: 0,

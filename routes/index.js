@@ -26,6 +26,6 @@ router.get('/auth/google/callback', user.google_cb);
 
 router.get('/upload', post.get_upload);
 router.post('/upload', post.post_upload);
+router.get('/post/:id', post.get_post);
 
-  
 module.exports = router;

@@ -35,10 +35,16 @@ main {
     .upload .title:focus {
       box-shadow: none;
       border-color: black; }
-  .upload .tags {
+  .upload #description {
     resize: none;
     height: 6rem; }
-    .upload .tags:focus {
+    .upload #description:focus {
+      box-shadow: none;
+      border-color: black; }
+  .upload #tags {
+    resize: none;
+    height: 4rem; }
+    .upload #tags:focus {
       box-shadow: none;
       border-color: black; }
 
@@ -72,9 +78,9 @@ main {
     width: 400px;
     height: 300px;
     cursor: pointer; }
-  .upload #tags::-webkit-scrollbar {
+  .upload textarea::-webkit-scrollbar {
     display: none; }
-  .upload #tags {
+  .upload textarea {
     -ms-overflow-style: none;
     scrollbar-width: none; }
 

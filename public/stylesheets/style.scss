@@ -56,9 +56,20 @@ $image-width: 400px;
     }
   }
 
-  .tags {
+  #description {
     resize: none;
     height: 6rem;
+
+    &:focus {
+      box-shadow: none;
+      border-color: black;
+    }
+  }
+
+
+  #tags {
+    resize: none;
+    height: 4rem;
 
     &:focus {
       box-shadow: none;
@@ -108,11 +119,11 @@ $image-width: 400px;
     cursor: pointer; 
   }
 
-  #tags::-webkit-scrollbar {
+  textarea::-webkit-scrollbar {
     display: none;
   }
 
-  #tags {
+  textarea {
     -ms-overflow-style: none;
     scrollbar-width: none;
   }
