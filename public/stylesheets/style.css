@@ -1,12 +1,16 @@
 body {
-  height: 100%; }
+  height: 100%;
+  padding-top: 60px; }
+
+nav {
+  height: 60px; }
 
 @media only screen and (min-width: 992px) {
   nav .input-group {
     width: 20rem !important; } }
 
 main {
-  height: calc(100vh - 60px);
+  height: calc(100vh - 60px - 60px);
   min-height: calc(800px); }
 
 .signup {
@@ -31,7 +35,8 @@ main {
     border-right: 0;
     border-radius: 0;
     height: 2rem;
-    font-size: 1.2rem; }
+    font-size: 1.2rem;
+    font-weight: bold; }
     .upload .title:focus {
       box-shadow: none;
       border-color: black; }

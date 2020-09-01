@@ -2,7 +2,7 @@ mixin navbar()
   header 
     nav.navbar.navbar-expand-lg.navbar-light.bg-white.fixed-top.font-weight-bold.shadow-sm
       a.navbar-brand.d-block.mx-auto.mr-lg-3(href='#')
-        img(src='images/logo.svg' height="36" alt="Logo")
+        img(src='/images/logo.svg' height="36" alt="Logo")
       button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
         span.navbar-toggler-icon
       #navbarSupportedContent.collapse.navbar-collapse
@@ -11,7 +11,7 @@ mixin navbar()
             input.form-control(type='search' placeholder='Search...' aria-label='Search')
             div.input-group-append
               button.btn.btn-light.border(type='submit')
-                img.px-2(src='images/search.svg' alt="Search")
+                img.px-2(src='/images/search.svg' alt="Search")
         ul.navbar-nav.mr-2
           if user
             a.nav-link(href='/upload') Post

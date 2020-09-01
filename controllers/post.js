@@ -1,4 +1,5 @@
-const upload = require('../middleware/multer-s3');
+const { upload, s3 } = require('../middleware/multer-s3');
+const  { S3_BUCKET_URL } = require('../config/amazon.js');
 const { processTags } = require('../helper/validate-upload');
 let models = require('../db/models');
 let db = require('../db/models/index');
@@ -7,7 +8,7 @@ exports.get_upload = function(req, res, next) {
     if(req.user == null) {
         res.redirect('/')
     }
-    res.render('post/upload', { title: 'Upload an image | Opdoot', user: req.user});
+    res.render('post/upload', { title: 'Upload an image | Opdoot', user: req.user });
 }
 
 
@@ -60,6 +61,7 @@ exports.post_upload = function(req, res, next) {
                 await post.addTag(newTag, { transaction: t });
             };
             await t.commit();
+            res.redirect('/post/' + post.file);
         } catch (error) {
             if(t) {
                 await t.rollback();
@@ -69,10 +71,23 @@ exports.post_upload = function(req, res, next) {
             console.log(error);
             return;
         }
-        res.redirect('/');
     })
 }
 
-exports.get_post = function(req, res, next) {
-    res.render('post/post', { title: 'Post | Opdoot', user: req.user});
+exports.get_post = async function(req, res, next) {
+    try {
+        let post = await models.Post.findOne({ where: { file: req.params.id }});
+        if(post == null) {
+            throw new Error("Post does not exist");
+        }
+        res.render('post/post', { 
+            title: post.title + ' | Opdoot', 
+            user: req.user,
+            postTitle: post.title,
+            url: S3_BUCKET_URL + '/' + req.params.id,
+            description: post.description
+       });
+    } catch (error) {
+        res.render('404');
+    }
 }
