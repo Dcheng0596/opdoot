@@ -8,7 +8,19 @@ html(lang='en')
   body.bg-light
     +navbar()
     main.container
-      h3.h3= postTitle
-      img(src=url alt=postTitle width="600")
-      p= description
+      .row.post
+        .col-12.col-lg-7
+          .card.border-0.my-3.p-4.bg-white.shadow.post-stats-container
+            .post-image-container.d-flex.justify-content-center
+              img.post-image(src=url alt=postTitle)
+          aside.sidebar.w-100
+        .col
+          .card.border-0.my-3.p-4.bg-white.shadow.post-info
+            h4.h4.mt-2= postTitle
+            div.d-inline-block.position-relative
+              img.profile-picture(src=poster.profilePicture, alt="profile picture")
+              a.mt-2.stretched-link(href="") 
+                span.mx-2.link= poster.username
+            p.mt-2= description
+          aside.sidebar.w-100
   +footer("post")

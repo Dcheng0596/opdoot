@@ -1,23 +1,36 @@
 body {
   height: 100%;
-  padding-top: 60px;
 }
 
+
+main {
+  min-height: calc(100vh - 60px - 60px);
+  margin-top: 60px;
+}
+
+
 nav {
-  height: 60px;
+  .profile-picture {
+    border-radius: 50%;
+    width: 40px;
+  }
 }
 
 @media only screen and (min-width: 992px) {
   nav {
+    height: 60px;
     .input-group {
       width: 20rem !important;
     }
   }
 }
 
-main {
-  height: calc(100vh - 60px - 60px);
-  min-height: calc(800px);
+.signup-page, .login-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: calc(100vh - 60px);
+  margin-top: 0;
 }
 
 .signup {
@@ -136,6 +149,42 @@ $image-width: 400px;
   }
 
 }
+
+.post { 
+  
+  .profile-picture {
+    width: 40px;
+    border-radius: 50%;
+  }
+
+  .post-stats-container{
+    height: 350px;
+  }
+
+
+  .post-image-container{
+    height: 200px;
+    background-color: black;
+  }
+
+  .post-image {
+    max-width: 100%;
+    object-fit: contain;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .post-info {
+    position: fixesd;
+    //width: 374px;
+  }
+
+
+  .container{
+    max-width: 1440px;
+  }
+}
+
 
 footer {
   height: 60px;

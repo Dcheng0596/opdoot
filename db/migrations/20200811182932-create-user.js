@@ -1,3 +1,5 @@
+const { S3_BUCKET_URL } = require('../../config/amazon');
+
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -33,7 +35,7 @@ module.exports = {
       },
       profilePicture: {
         allowNull: false,
-        defaultValue: "file-location",
+        defaultValue: S3_BUCKET_URL + '/' + "users/default-user-image.jpg",
         type: Sequelize.STRING
       },
       createdAt: {

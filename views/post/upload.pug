@@ -7,8 +7,8 @@ html(lang='en')
   +head(title)
   body.bg-light
     +navbar()
-    main
-      .h-100.d-flex.align-items-center
+    main.d-flex.flex-column.justify-content-center
+      .h-100
         .card.upload.bg-white.mx-auto.shadow.border-0
           .px-3.pt-3.pb-1
             input#title.title.bg-white.form-control(placeholder="Give your post a title" maxlength="100" autocomplete="off" type="text", name="title")
@@ -24,7 +24,7 @@ html(lang='en')
             input#input-file(type="file", name="file")
           .card-body.px-3
             p#error.small.text-danger
-            textarea#description.form-control.mt-2(placeholder="Write a description" maxlength="200" type="text", name="description")
+            textarea#description.form-control(placeholder="Write a description" maxlength="200" type="text", name="description")
             span#description-char.d-block.small.text-right.mb-1 0/200
             textarea#tags.form-control.mt-2(placeholder="Tags E.g. your amazing tags" maxlength="200" type="text", name="tags")
             span#tags-char.d-block.small.text-right.mb-1 0/200

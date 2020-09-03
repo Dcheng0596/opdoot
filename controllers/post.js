@@ -80,14 +80,17 @@ exports.get_post = async function(req, res, next) {
         if(post == null) {
             throw new Error("Post does not exist");
         }
+        let poster = await post.getUser();
         res.render('post/post', { 
             title: post.title + ' | Opdoot', 
             user: req.user,
+            poster: poster,
             postTitle: post.title,
             url: S3_BUCKET_URL + '/' + req.params.id,
             description: post.description
        });
     } catch (error) {
+        console.log(error);
         res.render('404');
     }
 }
