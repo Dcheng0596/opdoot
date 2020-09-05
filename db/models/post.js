@@ -28,6 +28,14 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: "",
       type: DataTypes.CHAR(100)
     },
+    width: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
+    height: {
+      allowNull: false,
+      type: DataTypes.INTEGER
+    },
     description: {
       allowNull: false,
       defaultValue: "",

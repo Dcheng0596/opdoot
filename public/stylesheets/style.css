@@ -102,20 +102,27 @@ nav .profile-picture {
   width: 40px;
   border-radius: 50%; }
 
-.post .post-stats-container {
-  height: 350px; }
+.post #post-image-container {
+  max-width: 762px;
+  background-color: black;
+  display: flex;
+  justify-content: center; }
 
-.post .post-image-container {
-  height: 200px;
-  background-color: black; }
-
-.post .post-image {
-  max-width: 100%;
+.post #post-image {
+  width: 100%;
   object-fit: contain; }
+
+.post #tag {
+  font-size: 1rem;
+  padding: 1rem;
+  margin-right: .7rem;
+  margin-bottom: .7rem;
+  text-transform: lowercase; }
 
 @media only screen and (min-width: 992px) {
   .post-info {
-    position: fixesd; }
+    position: sticky;
+    top: calc(60px + 1rem); }
   .container {
     max-width: 1440px; } }
 

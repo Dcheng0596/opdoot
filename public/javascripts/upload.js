@@ -22,9 +22,14 @@ function previewImage(file) {
         } else {
             this.style.height = "100%";
         }
+        form.set('width', this.naturalWidth);
+        form.set('height', this.naturalHeight);
+        enableSubmit();
         image.hidden = false;
     }
-    dropArea.classList.add("dropped")
+    dropArea.classList.add("dropped");
+    console.log(image.naturalWidth);
+    
     form.set('file', file);
 };
 
@@ -39,7 +44,7 @@ function showSpinner() {
 }
 
 function enableSubmit() {
-    if(form.has('file')) {
+    if(form.has('file') && form.has('width') && form.has('height')) {
         submit.removeAttribute("disabled");
     }
 }
@@ -142,8 +147,12 @@ submit.addEventListener("click", async function() {
             method: 'POST',
             body: form
         });
-        const resHTML = await response.text();
-        document.write(resHTML);
+        const resJSON = await response.json();
+        if(resJSON.error) {
+            document.getElementById("error").innerText = resJSON.error;
+        } else {
+            location.href = resJSON.url;
+        }
     } catch (error) {
         console.log(error)
     }
@@ -163,7 +172,6 @@ async function handleImageUpload(file) {
     try {
       const compressedFile = await imageCompression(imageFile, options);
       previewImage(compressedFile);
-      enableSubmit();
     } catch (error) {
       console.log(error);
     }

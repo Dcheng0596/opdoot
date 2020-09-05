@@ -13,6 +13,14 @@ module.exports = {
         unique: true,
         type: Sequelize.STRING
       },
+      width: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
+      height: {
+        allowNull: false,
+        type: Sequelize.INTEGER
+      },
       title: {
         allowNull: false,
         defaultValue: "",

@@ -40,11 +40,18 @@ exports.post_upload = function(req, res, next) {
                 return;
             }
         }
+        if(req.body.height == null && req.body.width == null) {
+            res.status(500);
+            res.render('error');
+            return;
+        }
         let t;
         try {
             t = await db.sequelize.transaction();
             let post = await models.Post.create({
                 file: req.file.key,
+                width: req.body.width,
+                height: req.body.height,
                 title: req.body.title,
                 description: req.body.description,
             }, { transaction: t });
@@ -61,14 +68,17 @@ exports.post_upload = function(req, res, next) {
                 await post.addTag(newTag, { transaction: t });
             };
             await t.commit();
-            res.redirect('/post/' + post.file);
+            res.json({
+                url:'http://localhost:3000/post/' + post.file
+            });
         } catch (error) {
             if(t) {
                 await t.rollback();
             }
             res.status(500);
-            res.render('error');
-            console.log(error);
+            res.json({
+                error: 'Upload failed'
+            });
             return;
         }
     })
@@ -81,14 +91,33 @@ exports.get_post = async function(req, res, next) {
             throw new Error("Post does not exist");
         }
         let poster = await post.getUser();
+        let tags = await post.getTags();
+
+        let maxImageWidth = 762; //Width of the post-image-container
+        let imageRatio = post.height/post.width;
+
+        let containerHeight = post.height;
+        let imageWidth = post.width
+
+        if(imageWidth > maxImageWidth) {
+            imageWidth = maxImageWidth;
+            containerHeight = maxImageWidth * imageRatio;
+        }
+
         res.render('post/post', { 
             title: post.title + ' | Opdoot', 
             user: req.user,
             poster: poster,
             postTitle: post.title,
+            postDate: post.createdAt,
+            containerHeight: containerHeight,
+            imageWidth: imageWidth,
+            tags: tags,
+            views: post.views,
             url: S3_BUCKET_URL + '/' + req.params.id,
             description: post.description
        });
+       await post.increment('views');
     } catch (error) {
         console.log(error);
         res.render('404');

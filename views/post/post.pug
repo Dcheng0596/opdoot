@@ -10,17 +10,28 @@ html(lang='en')
     main.container
       .row.post
         .col-12.col-lg-7
-          .card.border-0.my-3.p-4.bg-white.shadow.post-stats-container
-            .post-image-container.d-flex.justify-content-center
-              img.post-image(src=url alt=postTitle)
-          aside.sidebar.w-100
+          #post-stats-container.card.border-0.my-3.p-4.bg-white.shadow
+            #post-image-container(style="height: " + containerHeight + "px")
+              img#post-image(src=url alt=postTitle style="max-width: " + imageWidth + "px")
+            span= views
+            if tags
+              .d-flex.mt-4.flex-wrap
+                for tag in tags
+                  a#tag.badge.badge-light(href="")
+                    span= tag.name
         .col
           .card.border-0.my-3.p-4.bg-white.shadow.post-info
-            h4.h4.mt-2= postTitle
-            div.d-inline-block.position-relative
-              img.profile-picture(src=poster.profilePicture, alt="profile picture")
-              a.mt-2.stretched-link(href="") 
-                span.mx-2.link= poster.username
-            p.mt-2= description
-          aside.sidebar.w-100
+            if title
+              h4.h4.mt-2= postTitle
+            if description
+              p.mt-2= description
+            .d-flex.position-relative.mt-1.align-items-center.justify-content-between
+              .posted-by
+                a(href="") 
+                  img.profile-picture(src=poster.profilePicture, alt="profile picture")
+                a(href="") 
+                  span.mx-2.link= poster.username
+              .posted-on
+                span Posted on 
+                time(datetime=postDate).mr-2= postDate.toLocaleDateString(undefined, { day: 'numeric' , month: 'short' , year: 'numeric'})
   +footer("post")
