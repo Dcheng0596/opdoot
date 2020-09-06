@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Post.belongsTo(models.User);
-      Post.belongsToMany(models.User, { through: models.PostOpdoot });
-      Post.belongsToMany(models.Tag, { through: models.PostTag });
-      Post.belongsToMany(models.Comment, { through: models.PostComment });
+      Post.belongsToMany(models.User, { through: models.PostOpdoot, sourceKey: 'file'});
+      Post.belongsToMany(models.Tag, { through: models.PostTag, sourceKey: 'file' });
+      Post.belongsToMany(models.Comment, { through: models.PostComment, sourceKey: 'file' });
     }
   };
   Post.init({

@@ -43,6 +43,16 @@ module.exports = {
         defaultValue: 0,
         type: Sequelize.INTEGER
       },
+      opdoots: {
+        allowNull: false,
+        defaultValue: 0,
+        type: Sequelize.INTEGER
+      },
+      comments: {
+        allowNull: false,
+        defaultValue: 0,
+        type: Sequelize.INTEGER
+      },
       views: {
         allowNull: false,
         defaultValue: 0,

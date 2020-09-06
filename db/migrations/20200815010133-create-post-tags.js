@@ -2,13 +2,13 @@
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('PostTags', {
-      PostId: {
+      PostFile: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.STRING,
         primaryKey: true,
         references: {
           model: 'Posts',
-          key: 'id'
+          key: 'file'
         }
       },
       TagId: {

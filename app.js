@@ -38,6 +38,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-store')
+  next()
+})
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 

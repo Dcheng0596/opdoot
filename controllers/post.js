@@ -1,8 +1,8 @@
 const { upload, s3 } = require('../middleware/multer-s3');
 const  { S3_BUCKET_URL } = require('../config/amazon.js');
 const { processTags } = require('../helper/validate-upload');
-let models = require('../db/models');
-let db = require('../db/models/index');
+const models = require('../db/models');
+const db = require('../db/models/index');
 
 exports.get_upload = function(req, res, next) {
     if(req.user == null) {
@@ -90,9 +90,30 @@ exports.get_post = async function(req, res, next) {
         if(post == null) {
             throw new Error("Post does not exist");
         }
+        if(!req.viewed) {
+            await post.increment('views');
+        }
+        
         let poster = await post.getUser();
         let tags = await post.getTags();
-
+        let opdootType = "novote";
+        if(req.user) {
+            let postOpdoot = await models.PostOpdoot.findOne({
+                where: {
+                    UserId: req.user.id,
+                    PostFile: req.params.id
+                }
+            })
+            if(!postOpdoot) {
+                opdootType = ""
+            } else if(postOpdoot.OpdootTypeId == 1) {
+                opdootType = "upvote";
+            } else if(postOpdoot.OpdootTypeId == 2) {
+                opdootType = "downvote";
+            } else {
+                opdootType = ""
+            }
+        }
         let maxImageWidth = 762; //Width of the post-image-container
         let imageRatio = post.height/post.width;
 
@@ -108,18 +129,75 @@ exports.get_post = async function(req, res, next) {
             title: post.title + ' | Opdoot', 
             user: req.user,
             poster: poster,
-            postTitle: post.title,
-            postDate: post.createdAt,
+            post: post,
+            opdootType: opdootType,
             containerHeight: containerHeight,
             imageWidth: imageWidth,
             tags: tags,
-            views: post.views,
             url: S3_BUCKET_URL + '/' + req.params.id,
             description: post.description
        });
-       await post.increment('views');
     } catch (error) {
         console.log(error);
         res.render('404');
     }
+}
+
+exports.post_opdoot = async function(req, res, next) {
+    try {
+        if(!req.body.file || !req.body.vote) {
+            throw new Error("Missing body keys")
+        }
+        t = await db.sequelize.transaction();
+        let post = await models.Post.findOne({
+            where: { file: req.body.file },
+            transaction: t
+        })
+        if(!req.user) {
+            throw new Error("User not logged in")
+        }
+        let user = req.user;
+        let hasUser = await post.hasUser(user, { transaction: t });
+        if(!hasUser) {
+            await post.addUser(user), { transaction: t };
+        }
+        let postOpdoot = await models.PostOpdoot.findOne({
+            where: {
+                UserId: user.id,
+                PostFile: req.body.file
+            }, transaction: t
+        })
+        if(req.body.vote == "upvote") {
+            if(postOpdoot.OpdootTypeId == 1) {
+                await post.decrement('opdoots', { transaction: t })
+                postOpdoot.OpdootTypeId = null;
+            } else if(postOpdoot.OpdootTypeId == 2) {
+                await post.increment('opdoots', { by: 2}, { transaction: t })
+                postOpdoot.OpdootTypeId = 1;
+            } else {
+                await post.increment('opdoots', { transaction: t })
+                postOpdoot.OpdootTypeId = 1;
+            }
+        } else if(req.body.vote == "downvote") {
+            if(postOpdoot.OpdootTypeId == 2) {
+                await post.increment('opdoots', { transaction: t })
+                postOpdoot.OpdootTypeId = null;
+            } else if(postOpdoot.OpdootTypeId == 1) {
+                await post.decrement('opdoots', { by: 2}, { transaction: t })
+                postOpdoot.OpdootTypeId = 2;
+            } else {
+                await post.decrement('opdoots', { transaction: t })
+                postOpdoot.OpdootTypeId = 2;
+            }
+        }
+        await postOpdoot.save();
+        await t.commit();
+        res.render('404');
+    } catch (error) {
+        if(t) {
+            await t.rollback();
+        }
+        console.log(error);
+        res.render('404');
+    }  
 }

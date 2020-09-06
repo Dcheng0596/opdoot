@@ -3,7 +3,9 @@ var router = express.Router();
 
 let index = require('../controllers/index');
 let user = require('../controllers/user');
-let post = require('../controllers/post')
+let post = require('../controllers/post');
+
+const viewed = require('../middleware/viewed');
 
 router.get('/', index.get_index);
 
@@ -26,6 +28,9 @@ router.get('/auth/google/callback', user.google_cb);
 
 router.get('/upload', post.get_upload);
 router.post('/upload', post.post_upload);
-router.get('/post/:id', post.get_post);
+router.get('/post/:id', viewed, post.get_post);
+
+router.post('/post/opdoot', post.post_opdoot);
+
 
 module.exports = router;

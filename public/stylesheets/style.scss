@@ -151,7 +151,6 @@ $image-width: 400px;
 }
 
 .post { 
-  
   .profile-picture {
     width: 40px;
     border-radius: 50%;
@@ -180,6 +179,7 @@ $image-width: 400px;
     margin-bottom: .7rem;
     text-transform: lowercase;
   }
+
 }
 
 @media only screen and (min-width: 992px) {
@@ -191,6 +191,10 @@ $image-width: 400px;
 
   .container{
     max-width: 1440px;
+  }
+
+  button {
+    border: none;
   }
 }
 

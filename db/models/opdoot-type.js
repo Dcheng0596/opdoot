@@ -11,8 +11,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      OpdootType.hasOne(models.PostOpdoot);
-      OpdootType.hasOne(models.CommentOpdoot);
+      OpdootType.hasMany(models.PostOpdoot);
+      OpdootType.hasMany(models.CommentOpdoot);
     }
   };
   OpdootType.init({

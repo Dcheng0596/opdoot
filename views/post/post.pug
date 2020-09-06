@@ -13,7 +13,14 @@ html(lang='en')
           #post-stats-container.card.border-0.my-3.p-4.bg-white.shadow
             #post-image-container(style="height: " + containerHeight + "px")
               img#post-image(src=url alt=postTitle style="max-width: " + imageWidth + "px")
-            span= views
+            .d-flex.mt-4.flex-wrap
+              #opdoot-container.d-flex(class=opdootType)
+                button#button-up.bg-white
+                  img(src="/images/opdoot/up.svg" width="28" alt="upvote")
+                span#opdoots= post.opdoots
+                button#button-down.bg-white
+                  img(src="/images/opdoot/down.svg" width="28" alt="upvote")
+              span= post.views.toLocaleString() + " Views"
             if tags
               .d-flex.mt-4.flex-wrap
                 for tag in tags
@@ -22,7 +29,7 @@ html(lang='en')
         .col
           .card.border-0.my-3.p-4.bg-white.shadow.post-info
             if title
-              h4.h4.mt-2= postTitle
+              h4.h4.mt-2= post.title
             if description
               p.mt-2= description
             .d-flex.position-relative.mt-1.align-items-center.justify-content-between
@@ -33,5 +40,5 @@ html(lang='en')
                   span.mx-2.link= poster.username
               .posted-on
                 span Posted on 
-                time(datetime=postDate).mr-2= postDate.toLocaleDateString(undefined, { day: 'numeric' , month: 'short' , year: 'numeric'})
+                time(datetime=post.createdAt).mr-2= post.createdAt.toLocaleDateString(undefined, { day: 'numeric' , month: 'short' , year: 'numeric'})
   +footer("post")

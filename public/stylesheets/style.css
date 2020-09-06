@@ -124,7 +124,9 @@ nav .profile-picture {
     position: sticky;
     top: calc(60px + 1rem); }
   .container {
-    max-width: 1440px; } }
+    max-width: 1440px; }
+  button {
+    border: none; } }
 
 footer {
   height: 60px;
