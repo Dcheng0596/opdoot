@@ -1,5 +1,23 @@
 body {
   height: 100%;
+
+  textarea::-webkit-scrollbar {
+    display: none;
+  }
+
+  textarea {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  textarea {
+    resize: none;
+    overflow: hidden;
+    &:focus {
+      box-shadow: none !important;
+      border-color: black !important;
+    }
+  }
 }
 
 
@@ -77,24 +95,11 @@ $image-width: 400px;
   }
 
   #description {
-    resize: none;
     height: 6rem;
-
-    &:focus {
-      box-shadow: none;
-      border-color: black;
-    }
   }
 
-
   #tags {
-    resize: none;
     height: 4rem;
-
-    &:focus {
-      box-shadow: none;
-      border-color: black;
-    }
   }
 
   @keyframes change-color {
@@ -139,26 +144,21 @@ $image-width: 400px;
     cursor: pointer; 
   }
 
-  textarea::-webkit-scrollbar {
-    display: none;
-  }
-
-  textarea {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-
 }
 
-.post { 
+.post {
+
   .profile-picture {
-    width: 40px;
     border-radius: 50%;
-  }
+  } 
 
-  .post-stats-container{
+  .username {
+    color: black;
+    font-weight: bold;
+    &:hover {
+      text-decoration: none;
+    }
   }
-
 
   #post-image-container{
     max-width: 762px;
@@ -180,6 +180,10 @@ $image-width: 400px;
     text-transform: lowercase;
   }
 
+  button {
+    border: none;
+  }
+
 }
 
 @media only screen and (min-width: 992px) {
@@ -191,6 +195,32 @@ $image-width: 400px;
 
   .container{
     max-width: 1440px;
+  }
+
+}
+
+.comment {
+  .profile-picture {
+    border-radius: 50%;
+  }
+
+  textarea {
+    height: 80px
+  }
+
+  #user-comment-hidden {
+    display: none !important;
+  }
+
+  .comment-username {
+    font-weight: bold;
+  }
+
+  #signin {
+    font-size: 18px;
+    a {
+      text-decoration: none;
+    }
   }
 
   button {

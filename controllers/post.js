@@ -69,7 +69,7 @@ exports.post_upload = function(req, res, next) {
             };
             await t.commit();
             res.json({
-                url:'http://localhost:3000/post/' + post.file
+                url:'/post/' + post.file
             });
         } catch (error) {
             if(t) {
@@ -145,12 +145,12 @@ exports.get_post = async function(req, res, next) {
 
 exports.post_opdoot = async function(req, res, next) {
     try {
-        if(!req.body.file || !req.body.vote) {
+        if(!req.body.id || !req.body.vote) {
             throw new Error("Missing body keys")
         }
         t = await db.sequelize.transaction();
         let post = await models.Post.findOne({
-            where: { file: req.body.file },
+            where: { file: req.body.id },
             transaction: t
         })
         if(!req.user) {
@@ -164,7 +164,7 @@ exports.post_opdoot = async function(req, res, next) {
         let postOpdoot = await models.PostOpdoot.findOne({
             where: {
                 UserId: user.id,
-                PostFile: req.body.file
+                PostFile: req.body.id
             }, transaction: t
         })
         if(req.body.vote == "upvote") {
@@ -200,4 +200,8 @@ exports.post_opdoot = async function(req, res, next) {
         console.log(error);
         res.render('404');
     }  
+}
+
+exports.post_comment = async function(req, res, next) {
+
 }

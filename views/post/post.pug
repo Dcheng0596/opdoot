@@ -10,17 +10,18 @@ html(lang='en')
     main.container
       .row.post
         .col-12.col-lg-7
-          #post-stats-container.card.border-0.my-3.p-4.bg-white.shadow
+          #post-stats-container.card.border-0.mt-3.mb-1.p-4.bg-white.shadow
             #post-image-container(style="height: " + containerHeight + "px")
               img#post-image(src=url alt=postTitle style="max-width: " + imageWidth + "px")
             .d-flex.mt-4.flex-wrap
-              #opdoot-container.d-flex(class=opdootType)
+              span.mr-auto= post.views.toLocaleString() + " Views"
+              span.mx-2 10 Comments
+              #opdoot-container(class=opdootType)
                 button#button-up.bg-white
-                  img(src="/images/opdoot/up.svg" width="28" alt="upvote")
-                span#opdoots= post.opdoots
+                  img(src="/images/opdoot/up.svg" width="25" alt="upvote")
+                span#opdoots.mx-2= post.opdoots
                 button#button-down.bg-white
-                  img(src="/images/opdoot/down.svg" width="28" alt="upvote")
-              span= post.views.toLocaleString() + " Views"
+                  img(src="/images/opdoot/down.svg" width="25" alt="upvote")
             if tags
               .d-flex.mt-4.flex-wrap
                 for tag in tags
@@ -35,10 +36,47 @@ html(lang='en')
             .d-flex.position-relative.mt-1.align-items-center.justify-content-between
               .posted-by
                 a(href="") 
-                  img.profile-picture(src=poster.profilePicture, alt="profile picture")
-                a(href="") 
+                  img.profile-picture(src=poster.profilePicture, alt=poster.username width="40" height="40")
+                a.username(href="") 
                   span.mx-2.link= poster.username
               .posted-on
                 span Posted on 
-                time(datetime=post.createdAt).mr-2= post.createdAt.toLocaleDateString(undefined, { day: 'numeric' , month: 'short' , year: 'numeric'})
+                time(datetime=post.createdAt).mr-2= post.createdAt.toLocaleDateString(undefined, { day: 'numeric' , month: 'short' , year: 'numeric'})    
+      .row.comment
+        .col-12.col-lg-7
+          .card.border-0.mt-3.mb-1.p-4.bg-white.shadow
+            if user == null
+              #signin.text-center
+                a(href="/signup") Signup 
+                | or
+                a(href="/login")  Login 
+                | to post a comment
+            else
+             .d-flex.flex-column
+               .d-flex
+                 .posted-by.mr-4
+                   a(href="") 
+                     img.profile-picture(src=poster.profilePicture, alt=poster.username width="60" height="60")
+                 .d-flex.flex-column.w-100
+                   textarea#comment-area.form-control(placeholder="Comment..." maxlength="200" type="text" name="comment")
+                   span#comment-char.d-block.small 0/150
+               button#post-comment.btn.btn-primary.align-self-end Comment
+            #comment-section.d-flex.flex-column 
+              #user-comment-hidden.d.d-flex.flex-column.mt-4
+                .d-flex
+                  .posted-by.mr-4
+                    a(href="") 
+                      img.profile-picture(src=poster.profilePicture, alt="profile picture" width="60" height="60")
+                  .d-flex.flex-column.w-100
+                    span.comment-username= poster.username 
+                    p.comment-text
+                .comment-bar.d-flex.justify-content-between
+                  #comment-opdoot-container.align-self-center(class=opdootType)
+                    button#comment-button-up.bg-white
+                      img(src="/images/opdoot/up.svg" width="20" alt="upvote")
+                    span#comment-opdoots.mx-2= post.opdoots
+                    button#comment-button-down.bg-white
+                      img(src="/images/opdoot/down.svg" width="20" alt="upvote")
+                  button#post-comment.btn.btn-primary.align-self-end Reply
+        
   +footer("post")

@@ -1,5 +1,16 @@
 body {
   height: 100%; }
+  body textarea::-webkit-scrollbar {
+    display: none; }
+  body textarea {
+    -ms-overflow-style: none;
+    scrollbar-width: none; }
+  body textarea {
+    resize: none;
+    overflow: hidden; }
+    body textarea:focus {
+      box-shadow: none !important;
+      border-color: black !important; }
 
 main {
   min-height: calc(100vh - 60px - 60px);
@@ -50,17 +61,9 @@ nav .profile-picture {
       box-shadow: none;
       border-color: black; }
   .upload #description {
-    resize: none;
     height: 6rem; }
-    .upload #description:focus {
-      box-shadow: none;
-      border-color: black; }
   .upload #tags {
-    resize: none;
     height: 4rem; }
-    .upload #tags:focus {
-      box-shadow: none;
-      border-color: black; }
 
 @keyframes change-color {
   from {
@@ -92,15 +95,15 @@ nav .profile-picture {
     width: 400px;
     height: 300px;
     cursor: pointer; }
-  .upload textarea::-webkit-scrollbar {
-    display: none; }
-  .upload textarea {
-    -ms-overflow-style: none;
-    scrollbar-width: none; }
 
 .post .profile-picture {
-  width: 40px;
   border-radius: 50%; }
+
+.post .username {
+  color: black;
+  font-weight: bold; }
+  .post .username:hover {
+    text-decoration: none; }
 
 .post #post-image-container {
   max-width: 762px;
@@ -119,14 +122,35 @@ nav .profile-picture {
   margin-bottom: .7rem;
   text-transform: lowercase; }
 
+.post button {
+  border: none; }
+
 @media only screen and (min-width: 992px) {
   .post-info {
     position: sticky;
     top: calc(60px + 1rem); }
   .container {
-    max-width: 1440px; }
-  button {
-    border: none; } }
+    max-width: 1440px; } }
+
+.comment .profile-picture {
+  border-radius: 50%; }
+
+.comment textarea {
+  height: 80px; }
+
+.comment #user-comment-hidden {
+  display: none !important; }
+
+.comment .comment-username {
+  font-weight: bold; }
+
+.comment #signin {
+  font-size: 18px; }
+  .comment #signin a {
+    text-decoration: none; }
+
+.comment button {
+  border: none; }
 
 footer {
   height: 60px;

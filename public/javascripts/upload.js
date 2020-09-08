@@ -128,16 +128,20 @@ let descriptionChar = document.getElementById("description-char");
 document.getElementById("description").addEventListener("input", function() {
     form.set('description', this.value);
     descriptionChar.innerText = this.value.length + "/" + descriptionMaxChar;
+    this.style.height = "";
+    this.style.height = this.scrollHeight + 2 + "px";
 });
 
 let tagsChar = document.getElementById("tags-char");
 document.getElementById("tags").addEventListener("input", function() {
     form.set('tags', this.value);
     tagsChar.innerText = this.value.length + "/" + tagsMaxChar;
+    this.style.height = "";
+    this.style.height = this.scrollHeight + 2 + "px";
 });
 
 submit.addEventListener("click", async function() {
-    submit.setAttribute("disabled", "disabled");
+    submit.disabled = true;
 
     for(var pair of form.entries()) {
         console.log(pair[0]+ ', '+ pair[1]); 
@@ -159,7 +163,7 @@ submit.addEventListener("click", async function() {
 });
 
 async function handleImageUpload(file) {
-    submit.setAttribute("disabled", "disabled");
+    submit.disabled = true;
 
     const imageFile = file;
     console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
@@ -175,5 +179,4 @@ async function handleImageUpload(file) {
     } catch (error) {
       console.log(error);
     }
-   
   }

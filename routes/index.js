@@ -31,6 +31,8 @@ router.post('/upload', post.post_upload);
 router.get('/post/:id', viewed, post.get_post);
 
 router.post('/post/opdoot', post.post_opdoot);
+router.post('/post/comment', post.post_comment);
+
 
 
 module.exports = router;
