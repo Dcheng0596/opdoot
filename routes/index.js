@@ -28,10 +28,10 @@ router.get('/auth/google/callback', user.google_cb);
 
 router.get('/upload', post.get_upload);
 router.post('/upload', post.post_upload);
-router.get('/post/:id', viewed, post.get_post);
 
-router.post('/post/opdoot', post.post_opdoot);
-router.post('/post/comment', post.post_comment);
+router.get('/post/:id', viewed, post.get_post);
+router.post('/post/:id/opdoot', post.post_opdoot);
+router.post('/post/:id/comment', post.post_comment);
 
 
 

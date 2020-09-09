@@ -1,4 +1,6 @@
 'use strict';
+const { S3_BUCKET_URL } = require('../../config/amazon');
+
 const {
   Model
 } = require('sequelize');
@@ -11,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Comment.belongsToMany(models.User, { through: models.CommentOpdoot });
+      Comment.belongsTo(models.User, { through: models.CommentOpdoot });
+      Comment.belongsTo(models.Post);
+      Comment.hasMany(models.Comment);
     }
   };
   Comment.init({
@@ -22,6 +26,11 @@ module.exports = (sequelize, DataTypes) => {
     },
     username: {
       allowNull: false,
+      type: DataTypes.STRING
+    },
+    profilePicture: {
+      allowNull: false,
+      defaultValue: S3_BUCKET_URL + '/' + "users/default-user-image.jpg",
       type: DataTypes.STRING
     }
   }, {

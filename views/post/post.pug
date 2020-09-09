@@ -15,7 +15,7 @@ html(lang='en')
               img#post-image(src=url alt=postTitle style="max-width: " + imageWidth + "px")
             .d-flex.mt-4.flex-wrap
               span.mr-auto= post.views.toLocaleString() + " Views"
-              span.mx-2 10 Comments
+              span.mx-2 #{post.comments} Comments
               #opdoot-container(class=opdootType)
                 button#button-up.bg-white
                   img(src="/images/opdoot/up.svg" width="25" alt="upvote")
@@ -47,7 +47,7 @@ html(lang='en')
           .card.border-0.mt-3.mb-1.p-4.bg-white.shadow
             if user == null
               #signin.text-center
-                a(href="/signup") Signup 
+                a(href="/signup") Sign up 
                 | or
                 a(href="/login")  Login 
                 | to post a comment
@@ -66,10 +66,27 @@ html(lang='en')
                 .d-flex
                   .posted-by.mr-4
                     a(href="") 
-                      img.profile-picture(src=poster.profilePicture, alt="profile picture" width="60" height="60")
+                      img.profile-picture(src=poster.profilePicture, alt=poster.username width="60" height="60")
                   .d-flex.flex-column.w-100
                     span.comment-username= poster.username 
                     p.comment-text
+                .comment-bar.d-flex.justify-content-between
+                  #comment-opdoot-container.align-self-center(class=opdootType)
+                    button#comment-button-up.bg-white
+                      img(src="/images/opdoot/up.svg" width="20" alt="upvote")
+                    span#comment-opdoots.mx-2 0
+                    button#comment-button-down.bg-white
+                      img(src="/images/opdoot/down.svg" width="20" alt="upvote")
+                  button#post-comment.btn.btn-primary.align-self-end Reply
+              each comment in comments
+                #user-comment.d.d-flex.flex-column.mt-4
+                .d-flex
+                  .posted-by.mr-4
+                    a(href="") 
+                      img.profile-picture(src=comment.profilePicture, alt=comment.username width="60" height="60")
+                  .d-flex.flex-column.w-100
+                    span.comment-username= comment.username 
+                    p.comment-text= comment.comment
                 .comment-bar.d-flex.justify-content-between
                   #comment-opdoot-container.align-self-center(class=opdootType)
                     button#comment-button-up.bg-white

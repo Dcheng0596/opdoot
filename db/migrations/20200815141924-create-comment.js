@@ -1,4 +1,6 @@
 'use strict';
+const { S3_BUCKET_URL } = require('../../config/amazon');
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable('Comments', {
@@ -7,6 +9,20 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
+      },
+      PostId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Posts',
+          key: 'id'
+        }
+      },
+      CommentId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Comments',
+          key: 'id'
+        }
       },
       opdoots: {
         allowNull: false,
@@ -20,6 +36,11 @@ module.exports = {
       },
       username: {
         allowNull: false,
+        type: Sequelize.STRING
+      },
+      profilePicture: {
+        allowNull: false,
+        defaultValue: S3_BUCKET_URL + '/' + "users/default-user-image.jpg",
         type: Sequelize.STRING
       },
       UserId: {

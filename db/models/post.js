@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Post.belongsTo(models.User);
-      Post.belongsToMany(models.User, { through: models.PostOpdoot, sourceKey: 'file'});
-      Post.belongsToMany(models.Tag, { through: models.PostTag, sourceKey: 'file' });
-      Post.belongsToMany(models.Comment, { through: models.PostComment, sourceKey: 'file' });
+      Post.belongsToMany(models.User, { through: models.PostOpdoot});
+      Post.belongsToMany(models.Tag, { through: models.PostTag});
+      Post.hasMany(models.Comment);
     }
   };
   Post.init({
@@ -47,6 +47,11 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     views: {
+      allowNull: false,
+      defaultValue: 0,
+      type: DataTypes.INTEGER
+    },
+    comments: {
       allowNull: false,
       defaultValue: 0,
       type: DataTypes.INTEGER

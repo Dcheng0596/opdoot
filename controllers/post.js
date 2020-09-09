@@ -101,7 +101,7 @@ exports.get_post = async function(req, res, next) {
             let postOpdoot = await models.PostOpdoot.findOne({
                 where: {
                     UserId: req.user.id,
-                    PostFile: req.params.id
+                    PostId: post.id
                 }
             })
             if(!postOpdoot) {
@@ -114,6 +114,7 @@ exports.get_post = async function(req, res, next) {
                 opdootType = ""
             }
         }
+        let comments = await post.getComments();
         let maxImageWidth = 762; //Width of the post-image-container
         let imageRatio = post.height/post.width;
 
@@ -124,7 +125,6 @@ exports.get_post = async function(req, res, next) {
             imageWidth = maxImageWidth;
             containerHeight = maxImageWidth * imageRatio;
         }
-
         res.render('post/post', { 
             title: post.title + ' | Opdoot', 
             user: req.user,
@@ -134,6 +134,7 @@ exports.get_post = async function(req, res, next) {
             containerHeight: containerHeight,
             imageWidth: imageWidth,
             tags: tags,
+            comments: comments,
             url: S3_BUCKET_URL + '/' + req.params.id,
             description: post.description
        });
@@ -145,12 +146,12 @@ exports.get_post = async function(req, res, next) {
 
 exports.post_opdoot = async function(req, res, next) {
     try {
-        if(!req.body.id || !req.body.vote) {
+        if(!req.body.vote) {
             throw new Error("Missing body keys")
         }
         t = await db.sequelize.transaction();
         let post = await models.Post.findOne({
-            where: { file: req.body.id },
+            where: { file: req.params.id },
             transaction: t
         })
         if(!req.user) {
@@ -164,7 +165,7 @@ exports.post_opdoot = async function(req, res, next) {
         let postOpdoot = await models.PostOpdoot.findOne({
             where: {
                 UserId: user.id,
-                PostFile: req.body.id
+                PostId: post.id
             }, transaction: t
         })
         if(req.body.vote == "upvote") {
@@ -203,5 +204,33 @@ exports.post_opdoot = async function(req, res, next) {
 }
 
 exports.post_comment = async function(req, res, next) {
-
+    try {
+        if(!req.body.comment) {
+            throw new Error("Missing body keys")
+        }
+        t = await db.sequelize.transaction();
+        let post = await models.Post.findOne({
+            where: { file: req.params.id },
+            transaction: t
+        })
+        if(!req.user) {
+            throw new Error("User not logged in")
+        }
+        let user = req.user;
+        let comment = await models.Comment.create({
+            comment: req.body.comment,
+            username: user.username,
+            profilePicture: user.profilePicture
+        }, { transaction: t })
+        await post.addComment(comment, { transaction: t });
+        await user.addComment(comment, { transaction: t });
+        await post.increment('comments', { transaction: t });
+        await t.commit();
+    } catch (error) {
+        if(t) {
+            await t.rollback();
+        }
+        console.log(error);
+        res.render('404');
+    }
 }

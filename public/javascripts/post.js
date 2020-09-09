@@ -11,10 +11,9 @@ let postComment = document.getElementById("post-comment");
 let commentArea = document.getElementById("comment-area");
 let commentSection = document.getElementById("comment-section");
 
-async function fetchOpdoot(vote, url, id) {
+async function fetchOpdoot(vote, url) {
     try {
         let body = {
-            id: id,
             vote: vote
         }
         const response =  await fetch(url, {
@@ -47,7 +46,7 @@ function opdoot(upvote, downvote, opdootContainer, opdoots) {
             opdootContainer.classList.add("upvote");
             opdoots.innerText = parseInt(opdoots.innerText) + 1;
         }
-        fetchOpdoot("upvote", "/post/opdoot", file);
+        fetchOpdoot("upvote", "/post/" + file + "/opdoot");
     });
     
     downvote.addEventListener("click", function() {
@@ -66,12 +65,12 @@ function opdoot(upvote, downvote, opdootContainer, opdoots) {
             opdootContainer.classList.add("downvote");
             opdoots.innerText = parseInt(opdoots.innerText) - 1;
         }
-        fetchOpdoot("downvote", "/post/opdoot", file);
+        fetchOpdoot("downvote", "/post/" + file + "/opdoot");
     
     });
 }
 
-opdoot(upvote, opdootContainer, opdoots);
+opdoot(upvote, downvote, opdootContainer, opdoots);
 
 
 let commentChar = document.getElementById("comment-char");
@@ -106,13 +105,13 @@ postComment.addEventListener("click", async function(){
     comment.removeAttribute("id");
     comment.classList.add("user-comment");
     comment.querySelector(".comment-text").innerText = text;
-    commentSection.append(comment);
+    commentSection.prepend(comment);
     commentArea.value = '';
     try {
         let body = {
             comment: text
         }
-        const response =  await fetch("/post/comment", {
+        const response =  await fetch("/post/" + file + "/comment", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
