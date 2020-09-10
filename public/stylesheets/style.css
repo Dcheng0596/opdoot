@@ -132,24 +132,24 @@ nav .profile-picture {
   .container {
     max-width: 1440px; } }
 
-.comment .profile-picture {
+#comment-section .profile-picture {
   border-radius: 50%; }
 
-.comment textarea {
+#comment-section textarea {
   height: 80px; }
 
-.comment #user-comment-hidden {
+#comment-section #user-comment-hidden {
   display: none !important; }
 
-.comment .comment-username {
+#comment-section .comment-username {
   font-weight: bold; }
 
-.comment #signin {
+#comment-section #signin {
   font-size: 18px; }
-  .comment #signin a {
+  #comment-section #signin a {
     text-decoration: none; }
 
-.comment button {
+#comment-section button {
   border: none; }
 
 footer {

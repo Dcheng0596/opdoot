@@ -3,15 +3,31 @@ let upvote = document.getElementById("button-up");
 let downvote = document.getElementById("button-down");
 let opdoots = document.getElementById("opdoots");
 let opdootContainer = document.getElementById("comment-opdoot-container");
-let commentUpvote = document.getElementById("comment-button-up");
-let commentDownvote = document.getElementById("comment-button-down");
-let commentOpdoots = document.getElementById("comment-opdoots");
-let commentOpdootContainer = document.getElementById("comment-opdoot-container");
 let postComment = document.getElementById("post-comment");
 let commentArea = document.getElementById("comment-area");
 let commentSection = document.getElementById("comment-section");
 
-var x = window.matchMedia("(max-width: 700px)")
+let commentUpvote = document.getElementById("comment-button-up");
+let commentDownvote = document.getElementById("comment-button-down");
+let commentOpdoots = document.getElementById("comment-opdoots");
+let commentOpdootContainer = document.getElementById("comment-opdoot-container");
+
+function mediaEvent(mediaQuery) {
+    let commentSection = document.getElementById("comment-section");
+    let mobileView = document.getElementById("mobile-view");
+    let mainColumn = document.getElementById("main-column");
+    if(mediaQuery.matches) {
+        mobileView.appendChild(commentSection);
+    } else {
+        mainColumn.appendChild(commentSection);
+    }
+    
+}
+  
+  var mediaQuery = window.matchMedia("(max-width: 992px)")
+  mediaEvent(mediaQuery)
+  mediaQuery.addListener(mediaEvent) 
+  
 
 async function fetchOpdoot(vote, url) {
     try {
@@ -73,6 +89,7 @@ function opdoot(upvote, downvote, opdootContainer, opdoots) {
 }
 
 opdoot(upvote, downvote, opdootContainer, opdoots);
+//opdoot(commentUpvote, commentDownvote, commentOpdootContainer, commentOpdoots);
 
 
 let commentChar = document.getElementById("comment-char");
