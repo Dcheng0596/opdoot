@@ -183,20 +183,18 @@ $image-width: 400px;
   button {
     border: none;
   }
-
 }
 
 @media only screen and (min-width: 992px) {
   .post-info {
-    position: sticky;
-    top: calc(60px + 1rem);
+    position: fixed;
+    top: 60px;
+    width: 570px;
   }
-
 
   .container{
     max-width: 1440px;
   }
-
 }
 
 .comment {

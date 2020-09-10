@@ -32,7 +32,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       defaultValue: S3_BUCKET_URL + '/' + "users/default-user-image.jpg",
       type: DataTypes.STRING
-    }
+    },
+    replies: {
+      allowNull: false,
+      defaultValue: 0,
+      type: DataTypes.INTEGER
+    },
   }, {
     sequelize,
     modelName: 'Comment',

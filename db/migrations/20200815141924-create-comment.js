@@ -43,6 +43,11 @@ module.exports = {
         defaultValue: S3_BUCKET_URL + '/' + "users/default-user-image.jpg",
         type: Sequelize.STRING
       },
+      replies: {
+        allowNull: false,
+        defaultValue: 0,
+        type: Sequelize.INTEGER
+      },
       UserId: {
         type: Sequelize.INTEGER,
         references: {

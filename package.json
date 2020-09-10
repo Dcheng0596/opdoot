@@ -6,7 +6,7 @@
     "start": "node ./bin/www",
     "migrate": "sequelize db:migrate",
     "undo": "sequelize db:migrate:undo:all",
-    "seed": "opdoot>sequelize db:seed:all"
+    "seed": "sequelize db:seed:all"
   },
   "dependencies": {
     "aws-sdk": "^2.741.0",
