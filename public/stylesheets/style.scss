@@ -187,9 +187,8 @@ $image-width: 400px;
 
 @media only screen and (min-width: 992px) {
   .post-info {
-    position: fixed;
-    top: 60px;
-    width: 570px;
+    position: sticky;
+    top: calc(60px + 1rem);
   }
 
   .container{

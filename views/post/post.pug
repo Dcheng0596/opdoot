@@ -19,7 +19,7 @@ html(lang='en')
               #opdoot-container(class=opdootType)
                 button#button-up.bg-white
                   img(src="/images/opdoot/up.svg" width="25" alt="upvote")
-                span#opdoots.mx-2= post.opdoots
+                span#opdoots.mx-1= post.opdoots
                 button#button-down.bg-white
                   img(src="/images/opdoot/down.svg" width="25" alt="upvote")
             if tags
@@ -27,8 +27,62 @@ html(lang='en')
                 for tag in tags
                   a#tag.badge.badge-light(href="")
                     span= tag.name
-        .col
-          .card.border-0.my-3.p-4.bg-white.shadow.post-info
+          .card.border-0.mt-3.mb-1.p-4.bg-white.shadow
+            if user == null
+              #signin.text-center
+                a(href="/signup") Sign up 
+                | or
+                a(href="/login")  Login 
+                | to post a comment
+            else
+              .d-flex.flex-column
+                .d-flex
+                  .posted-by.mr-3
+                    a(href="") 
+                      img.profile-picture(src=poster.profilePicture, alt=poster.username width="50" height="50")
+                  .d-flex.flex-column.w-100
+                    textarea#comment-area.form-control(placeholder="Comment..." maxlength="200" type="text" name="comment")
+                    span#comment-char.d-block.small 0/150
+                button#post-comment.btn.btn-primary.align-self-end Comment
+          .card.border-0.mt-3.mb-4.p-4.bg-white.shadow.comment
+            #comment-section-bar.d-flex
+              h5.h5 #{post.comments} Comments
+            #comment-section.d-flex.flex-column 
+              #user-comment-hidden.media.mt-4(data-comment-id="")
+                .posted-by.mr-3
+                  a(href="") 
+                    img.profile-picture(src=poster.profilePicture, alt=poster.username width="50" height="50")
+                .media-body
+                  span.comment-username= poster.username 
+                  .comment-text.mb-1
+                  .comment-bar.d-flex.justify-content-between
+                    #comment-opdoot-container.align-self-center(class=opdootType)
+                      button#comment-button-up.bg-white
+                        img(src="/images/opdoot/up.svg" width="20" alt="upvote")
+                      span#comment-opdoots.mx-1 0
+                      button#comment-button-down.bg-white
+                        img(src="/images/opdoot/down.svg" width="20" alt="upvote")
+                      span.small.text-muted a few seconds ago
+                    button#post-comment.btn.btn-primary.btn-sm.align-self-end Reply
+              each comment in comments
+                .user-comment.media.mt-4
+                  .posted-by.mr-3
+                    a(href="") 
+                      img.profile-picture(src=comment.profilePicture, alt=comment.username width="50" height="50")
+                  .media-body
+                    span.comment-username= comment.username 
+                    .comment-text.mb-1= comment.comment
+                    .comment-bar.d-flex.justify-content-between
+                      #comment-opdoot-container.align-self-center(class=opdootType)
+                        button#comment-button-up.bg-white
+                          img(src="/images/opdoot/up.svg" width="20" alt="upvote")
+                        span#comment-opdoots.mx-1= comment.opdoots
+                        button#comment-button-down.bg-white
+                          img(src="/images/opdoot/down.svg" width="20" alt="upvote")
+                        span.small.text-muted= comment.timeago
+                      button#post-comment.btn.btn-primary.btn-sm.align-self-end Reply
+        .col.post-info-container
+          .card.border-0.mt-3.p-4.bg-white.shadow.post-info
             if title
               h4.h4.mt-2= post.title
             if description
@@ -40,60 +94,9 @@ html(lang='en')
                 a.username(href="") 
                   span.mx-2.link= poster.username
               .posted-on
-                span Posted on 
                 time(datetime=post.createdAt).mr-2= post.createdAt.toLocaleDateString(undefined, { day: 'numeric' , month: 'short' , year: 'numeric'})    
-      .row.comment
-        .col-12.col-lg-7
-          .card.border-0.mt-3.mb-1.p-4.bg-white.shadow
-            if user == null
-              #signin.text-center
-                a(href="/signup") Sign up 
-                | or
-                a(href="/login")  Login 
-                | to post a comment
-            else
-             .d-flex.flex-column
-               .d-flex
-                 .posted-by.mr-4
-                   a(href="") 
-                     img.profile-picture(src=poster.profilePicture, alt=poster.username width="60" height="60")
-                 .d-flex.flex-column.w-100
-                   textarea#comment-area.form-control(placeholder="Comment..." maxlength="200" type="text" name="comment")
-                   span#comment-char.d-block.small 0/150
-               button#post-comment.btn.btn-primary.align-self-end Comment
-            #comment-section.d-flex.flex-column 
-              #user-comment-hidden.d.d-flex.flex-column.mt-4
-                .d-flex
-                  .posted-by.mr-4
-                    a(href="") 
-                      img.profile-picture(src=poster.profilePicture, alt=poster.username width="60" height="60")
-                  .d-flex.flex-column.w-100
-                    span.comment-username= poster.username 
-                    p.comment-text
-                .comment-bar.d-flex.justify-content-between
-                  #comment-opdoot-container.align-self-center(class=opdootType)
-                    button#comment-button-up.bg-white
-                      img(src="/images/opdoot/up.svg" width="20" alt="upvote")
-                    span#comment-opdoots.mx-2 0
-                    button#comment-button-down.bg-white
-                      img(src="/images/opdoot/down.svg" width="20" alt="upvote")
-                  button#post-comment.btn.btn-primary.align-self-end Reply
-              each comment in comments
-                #user-comment.d.d-flex.flex-column.mt-4
-                .d-flex
-                  .posted-by.mr-4
-                    a(href="") 
-                      img.profile-picture(src=comment.profilePicture, alt=comment.username width="60" height="60")
-                  .d-flex.flex-column.w-100
-                    span.comment-username= comment.username 
-                    p.comment-text= comment.comment
-                .comment-bar.d-flex.justify-content-between
-                  #comment-opdoot-container.align-self-center(class=opdootType)
-                    button#comment-button-up.bg-white
-                      img(src="/images/opdoot/up.svg" width="20" alt="upvote")
-                    span#comment-opdoots.mx-2= post.opdoots
-                    button#comment-button-down.bg-white
-                      img(src="/images/opdoot/down.svg" width="20" alt="upvote")
-                  button#post-comment.btn.btn-primary.align-self-end Reply
+      .row
+        .col-12.col-lg-7#mobile-view
+        
         
   +footer("post")

@@ -11,6 +11,8 @@ let postComment = document.getElementById("post-comment");
 let commentArea = document.getElementById("comment-area");
 let commentSection = document.getElementById("comment-section");
 
+var x = window.matchMedia("(max-width: 700px)")
+
 async function fetchOpdoot(vote, url) {
     try {
         let body = {
@@ -88,39 +90,44 @@ function commentAreaEvent(commentArea) {
     commentArea.style.height = commentArea.scrollHeight + 2 + "px";
 }
 
-commentArea.addEventListener("input", function() {
-    commentAreaEvent(this);
-});
-
-window.onload =  function() {
-    commentAreaEvent(commentArea);
-};
-
-postComment.addEventListener("click", async function(){
-    let text = commentArea.value;
-    if(text == '' && !text) {
-        return;
-    }
-    let comment = document.getElementById("user-comment-hidden").cloneNode(true);
-    comment.removeAttribute("id");
-    comment.classList.add("user-comment");
-    comment.querySelector(".comment-text").innerText = text;
-    commentSection.prepend(comment);
-    commentArea.value = '';
-    try {
-        let body = {
-            comment: text
+if(commentArea) {
+    commentArea.addEventListener("input", function() {
+        commentAreaEvent(this);
+    });
+    
+    window.onload =  function() {
+        commentAreaEvent(commentArea);
+    };
+    
+    postComment.addEventListener("click", async function(){
+        let text = commentArea.value;
+        if(text == '' && !text) {
+            return;
         }
-        const response =  await fetch("/post/" + file + "/comment", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(body)
-        });     
-    } catch (error) {
-        console.log(error)
-    }
-});
+        try {
+            let body = {
+                comment: text
+            }
+            const response =  await fetch("/post/" + file + "/comment", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });    
+            let commentId = await response.text();
+            let comment = document.getElementById("user-comment-hidden").cloneNode(true);
+            comment.removeAttribute("id");
+            comment.classList.add("user-comment");
+            comment.querySelector(".comment-text").innerText = text;
+            comment.setAttribute("data-comment-id", commentId)
+            commentSection.prepend(comment);
+            commentArea.value = ''; 
+            commentChar.innerText = 0 + "/" + commentMaxChar;
+        } catch (error) {
+            console.log(error)
+        }
+    });
+}
 
 

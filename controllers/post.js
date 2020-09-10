@@ -3,7 +3,8 @@ const  { S3_BUCKET_URL } = require('../config/amazon.js');
 const { processTags } = require('../helper/validate-upload');
 const models = require('../db/models');
 const db = require('../db/models/index');
-
+const moment = require('moment');
+ 
 exports.get_upload = function(req, res, next) {
     if(req.user == null) {
         res.redirect('/')
@@ -115,6 +116,10 @@ exports.get_post = async function(req, res, next) {
             }
         }
         let comments = await post.getComments();
+        for(comment of comments) {
+            comment.timeago = moment(comment.createdAt).fromNow();
+            console.log(comment.opdoots);
+        }
         let maxImageWidth = 762; //Width of the post-image-container
         let imageRatio = post.height/post.width;
 
@@ -226,6 +231,7 @@ exports.post_comment = async function(req, res, next) {
         await user.addComment(comment, { transaction: t });
         await post.increment('comments', { transaction: t });
         await t.commit();
+        res.send(comment.id + "");
     } catch (error) {
         if(t) {
             await t.rollback();

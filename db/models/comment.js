@@ -24,6 +24,11 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: '',
       type: DataTypes.CHAR(1000)
     },
+    opdoots: {
+      allowNull: false,
+      defaultValue: 0,
+      type: DataTypes.INTEGER
+    },
     username: {
       allowNull: false,
       type: DataTypes.STRING
