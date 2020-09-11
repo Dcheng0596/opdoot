@@ -17,8 +17,8 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(models.Comment),
       User.hasOne(models.Facebook),
       User.hasOne(models.Google),
-      User.belongsToMany(models.Post, { through: models.PostOpdoot })
-      User.belongsToMany(models.Post, { through: models.CommentOpdoot })
+      User.belongsToMany(models.Post, { as: 'postOpdoots', through: models.PostOpdoot })
+      User.belongsToMany(models.Comment, { as: 'commentOpdoots', through: models.CommentOpdoot })
     }
   };
   User.init({

@@ -48,40 +48,23 @@ html(lang='en')
             .card.border-0.mt-3.mb-4.p-4.bg-white.shadow
               #comment-section-bar.d-flex
                 h5.h5 #{post.comments} Comments
-              .d-flex.flex-column 
+              #comments.d-flex.flex-column 
                 #user-comment-hidden.media.mt-4(data-comment-id="")
                   .posted-by.mr-3
                     a(href="") 
-                      img.profile-picture(src=poster.profilePicture, alt=poster.username width="50" height="50")
+                      img.profile-picture(src=user ? user.profilePicture : "", alt=poster.username width="50" height="50")
                   .media-body
-                    span.comment-username= poster.username 
+                    span.comment-username= user ? user.username : ""
                     .comment-text.mb-1
                     .comment-bar.d-flex.justify-content-between
-                      .comment-opdoot-container.align-self-center(class=opdootType)
+                      .comment-opdoot-container.align-self-center(class= user ? "" : "novote")
                         button.comment-button-up.bg-white
                           img(src="/images/opdoot/up.svg" width="20" alt="upvote")
                         span.comment-opdoots.mx-1 0
                         button.comment-button-down.bg-white
                           img(src="/images/opdoot/down.svg" width="20" alt="upvote")
-                        span.small.text-muted a few seconds ago
+                        span.timeago.small.text-muted a few seconds ago
                       button#post-comment.btn.btn-primary.btn-sm.align-self-end Reply
-                each comment in comments
-                  .user-comment.media.mt-4
-                    .posted-by.mr-3
-                      a(href="") 
-                        img.profile-picture(src=comment.profilePicture, alt=comment.username width="50" height="50")
-                    .media-body
-                      span.comment-username= comment.username 
-                      .comment-text.mb-1= comment.comment
-                      .comment-bar.d-flex.justify-content-between
-                        .comment-opdoot-container.align-self-center(class=opdootType)
-                          button.comment-button-up.bg-white
-                            img(src="/images/opdoot/up.svg" width="20" alt="upvote")
-                          span.comment-opdoots.mx-1= comment.opdoots
-                          button.comment-button-down.bg-white
-                            img(src="/images/opdoot/down.svg" width="20" alt="upvote")
-                          span.small.text-muted= comment.timeago
-                        button#post-comment.btn.btn-primary.btn-sm.align-self-end Reply
         .col.post-info-container
           .card.border-0.mt-3.p-4.bg-white.shadow.post-info
             if title

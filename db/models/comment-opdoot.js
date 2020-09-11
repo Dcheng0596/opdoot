@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   CommentOpdoot.init({
-    comment: DataTypes.TEXT
+
   }, {
     sequelize,
     modelName: 'CommentOpdoot',

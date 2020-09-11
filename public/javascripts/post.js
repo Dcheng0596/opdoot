@@ -2,15 +2,11 @@ let file = location.pathname.split('/')[2];
 let upvote = document.getElementById("button-up");
 let downvote = document.getElementById("button-down");
 let opdoots = document.getElementById("opdoots");
-let opdootContainer = document.getElementById("comment-opdoot-container");
+let opdootContainer = document.getElementById("opdoot-container");
 let postComment = document.getElementById("post-comment");
 let commentArea = document.getElementById("comment-area");
 let commentSection = document.getElementById("comment-section");
-
-let commentUpvote = document.getElementById("comment-button-up");
-let commentDownvote = document.getElementById("comment-button-down");
-let commentOpdoots = document.getElementById("comment-opdoots");
-let commentOpdootContainer = document.getElementById("comment-opdoot-container");
+let postComments = document.getElementById("comments");
 
 function mediaEvent(mediaQuery) {
     let commentSection = document.getElementById("comment-section");
@@ -47,7 +43,7 @@ async function fetchOpdoot(vote, url) {
     }
 }
 
-function opdoot(upvote, downvote, opdootContainer, opdoots) {
+function opdoot(upvote, downvote, opdootContainer, opdoots, url) {
     upvote.addEventListener("click", function() {
         if(opdootContainer.classList.contains("novote")){
             location.href = '/login'
@@ -64,7 +60,7 @@ function opdoot(upvote, downvote, opdootContainer, opdoots) {
             opdootContainer.classList.add("upvote");
             opdoots.innerText = parseInt(opdoots.innerText) + 1;
         }
-        fetchOpdoot("upvote", "/post/" + file + "/opdoot");
+        fetchOpdoot("upvote", url);
     });
     
     downvote.addEventListener("click", function() {
@@ -83,14 +79,12 @@ function opdoot(upvote, downvote, opdootContainer, opdoots) {
             opdootContainer.classList.add("downvote");
             opdoots.innerText = parseInt(opdoots.innerText) - 1;
         }
-        fetchOpdoot("downvote", "/post/" + file + "/opdoot");
+        fetchOpdoot("downvote", url);
     
     });
 }
 
-opdoot(upvote, downvote, opdootContainer, opdoots);
-//opdoot(commentUpvote, commentDownvote, commentOpdootContainer, commentOpdoots);
-
+opdoot(upvote, downvote, opdootContainer, opdoots, ("/post/" + file + "/opdoot"));
 
 let commentChar = document.getElementById("comment-char");
 let commentMaxChar = 150;
@@ -111,11 +105,7 @@ if(commentArea) {
     commentArea.addEventListener("input", function() {
         commentAreaEvent(this);
     });
-    
-    window.onload =  function() {
-        commentAreaEvent(commentArea);
-    };
-    
+ 
     postComment.addEventListener("click", async function(){
         let text = commentArea.value;
         if(text == '' && !text) {
@@ -138,7 +128,7 @@ if(commentArea) {
             comment.classList.add("user-comment");
             comment.querySelector(".comment-text").innerText = text;
             comment.setAttribute("data-comment-id", commentId)
-            commentSection.prepend(comment);
+            postComments.prepend(comment);
             commentArea.value = ''; 
             commentChar.innerText = 0 + "/" + commentMaxChar;
         } catch (error) {
@@ -147,4 +137,52 @@ if(commentArea) {
     });
 }
 
+let commentOffset = 0;
+let commentLimit = 20;
 
+function createComment(model) {
+    let comment = document.getElementById("user-comment-hidden").cloneNode(true);
+    comment.removeAttribute("id");
+    comment.classList.add("user-comment");
+    comment.querySelector(".comment-text").innerText = model.comment;
+    comment.querySelector(".profile-picture").setAttribute("src", model.profilePicture);
+    comment.querySelector(".comment-username").innerText = model.username;
+    comment.querySelector(".timeago").innerText = model.timeago;
+    comment.querySelector(".comment-opdoots").innerText = model.opdoots;
+    comment.setAttribute("data-comment-id", model.id)
+    opdoot(
+        comment.querySelector(".comment-button-up"),
+        comment.querySelector(".comment-button-down"),
+        comment.querySelector(".comment-opdoot-container"),
+        comment.querySelector(".comment-opdoots"),
+        "/comment/" + model.id + "/opdoot"
+    )
+
+    postComments.append(comment);
+}
+
+window.onload =  async function() {
+    if(commentArea) {
+        commentAreaEvent(commentArea);
+    }
+    let spinner = document.createElement("div");
+    spinner.classList.add("spinner-border");
+    spinner.classList.add("mx-auto");
+    postComments.append(spinner);
+    try {
+
+        const response =  await fetch("/post/" + file + "/comment?offset=" + commentOffset + "&limit=" + commentLimit, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });    
+        let comments = await response.json();
+        postComments.removeChild(spinner);
+        for(comment of comments.comments) {
+            createComment(comment);
+        }
+    } catch (error) {
+        console.log(error)
+    }
+};

@@ -1,5 +1,6 @@
 'use strict';
 const { S3_BUCKET_URL } = require('../../config/amazon');
+const moment = require('moment');
 
 const {
   Model
@@ -13,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Comment.belongsTo(models.User, { through: models.CommentOpdoot });
+      Comment.belongsTo(models.User);
+      Comment.belongsToMany(models.User, { as: 'commentOpdoots', through: models.CommentOpdoot });
       Comment.belongsTo(models.Post);
       Comment.hasMany(models.Comment);
     }
@@ -43,6 +45,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
       type: DataTypes.INTEGER
     },
+    timeago: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return moment(this.createdAt).fromNow();
+      }
+    }
   }, {
     sequelize,
     modelName: 'Comment',

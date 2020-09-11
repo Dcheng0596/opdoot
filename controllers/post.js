@@ -3,7 +3,6 @@ const  { S3_BUCKET_URL } = require('../config/amazon.js');
 const { processTags } = require('../helper/validate-upload');
 const models = require('../db/models');
 const db = require('../db/models/index');
-const moment = require('moment');
  
 exports.get_upload = function(req, res, next) {
     if(req.user == null) {
@@ -115,11 +114,6 @@ exports.get_post = async function(req, res, next) {
                 opdootType = ""
             }
         }
-        let comments = await post.getComments();
-        for(comment of comments) {
-            comment.timeago = moment(comment.createdAt).fromNow();
-            console.log(comment.opdoots);
-        }
         let maxImageWidth = 762; //Width of the post-image-container
         let imageRatio = post.height/post.width;
 
@@ -139,7 +133,6 @@ exports.get_post = async function(req, res, next) {
             containerHeight: containerHeight,
             imageWidth: imageWidth,
             tags: tags,
-            comments: comments,
             url: S3_BUCKET_URL + '/' + req.params.id,
             description: post.description
        });
@@ -163,40 +156,47 @@ exports.post_opdoot = async function(req, res, next) {
             throw new Error("User not logged in")
         }
         let user = req.user;
-        let hasUser = await post.hasUser(user, { transaction: t });
-        if(!hasUser) {
-            await post.addUser(user), { transaction: t };
-        }
-        let postOpdoot = await models.PostOpdoot.findOne({
-            where: {
-                UserId: user.id,
-                PostId: post.id
-            }, transaction: t
+        await post.addPostOpdoots(user, { transaction: t });
+        let postOpdoot = await post.getPostOpdoots({
+            where: { id: user.id },
+            transaction: t
         })
+        console.log(postOpdoot[0]);
+        postOpdoot = postOpdoot[0].PostOpdoot;
+        let upvote =  await models.OpdootType.findOne({
+            where: { name: "upvote" },
+            transaction: t
+        });
+        let downvote =  await models.OpdootType.findOne({
+            where: { name: "downvote" },
+            transaction: t
+        });
+        let isUpvote = await upvote.hasPostOpdoot(postOpdoot, { transaction: t })
+        let isDownvote = await downvote.hasPostOpdoot(postOpdoot, { transaction: t })
         if(req.body.vote == "upvote") {
-            if(postOpdoot.OpdootTypeId == 1) {
+            if(isUpvote) {
                 await post.decrement('opdoots', { transaction: t })
-                postOpdoot.OpdootTypeId = null;
-            } else if(postOpdoot.OpdootTypeId == 2) {
+                await postOpdoot.setOpdootType(null, { transaction: t });
+
+            } else if(isDownvote) {
                 await post.increment('opdoots', { by: 2}, { transaction: t })
-                postOpdoot.OpdootTypeId = 1;
+                await postOpdoot.setOpdootType(upvote, { transaction: t });
             } else {
                 await post.increment('opdoots', { transaction: t })
-                postOpdoot.OpdootTypeId = 1;
+                await postOpdoot.setOpdootType(upvote, { transaction: t });
             }
         } else if(req.body.vote == "downvote") {
-            if(postOpdoot.OpdootTypeId == 2) {
-                await post.increment('opdoots', { transaction: t })
-                postOpdoot.OpdootTypeId = null;
-            } else if(postOpdoot.OpdootTypeId == 1) {
+            if(isDownvote) {
+                await post.increment('opdoots', { transaction: t });
+                await postOpdoot.setOpdootType(null, { transaction: t });
+            } else if(isUpvote) {
                 await post.decrement('opdoots', { by: 2}, { transaction: t })
-                postOpdoot.OpdootTypeId = 2;
+                await postOpdoot.setOpdootType(downvote, { transaction: t });
             } else {
                 await post.decrement('opdoots', { transaction: t })
-                postOpdoot.OpdootTypeId = 2;
+                await postOpdoot.setOpdootType(downvote, { transaction: t });
             }
         }
-        await postOpdoot.save();
         await t.commit();
         res.render('404');
     } catch (error) {
@@ -240,3 +240,91 @@ exports.post_comment = async function(req, res, next) {
         res.render('404');
     }
 }
+
+exports.get_comment = async function(req, res, next) {
+    try {
+        let post = await models.Post.findOne({
+            where: { file: req.params.id }
+        })
+        if(post == null) {
+            throw new Error("Post does not exist");
+        }
+        let comments = await post.getComments({
+            offset: req.query.offset,
+            limit: req.query.limit
+        });
+        res.json({
+            comments: comments
+        })
+    } catch (error) {
+        console.log(error);
+        res.render('404');
+    }
+}
+
+exports.post_comment_opdoot = async function(req, res, next) {
+    try {
+        if(!req.body.vote) {
+            throw new Error("Missing body keys")
+        }
+        t = await db.sequelize.transaction();
+        let comment = await models.Comment.findOne({
+            where: { id: req.params.id },
+            transaction: t
+        })
+        if(!req.user) {
+            throw new Error("User not logged in")
+        }
+        let user = req.user;
+        await comment.addCommentOpdoots(user, { transaction: t });
+        let commentOpdoot = await comment.getCommentOpdoots({
+            where: { id: user.id },
+            transaction: t
+        })
+        console.log(commentOpdoot[0]);
+        commentOpdoot = commentOpdoot[0].CommentOpdoot;
+        let upvote =  await models.OpdootType.findOne({
+            where: { name: "upvote" },
+            transaction: t
+        });
+        let downvote =  await models.OpdootType.findOne({
+            where: { name: "downvote" },
+            transaction: t
+        });
+        let isUpvote = await upvote.hasCommentOpdoot(commentOpdoot, { transaction: t })
+        let isDownvote = await downvote.hasCommentOpdoot(commentOpdoot, { transaction: t })
+        if(req.body.vote == "upvote") {
+            if(isUpvote) {
+                await comment.decrement('opdoots', { transaction: t })
+                await commentOpdoot.setOpdootType(null, { transaction: t });
+
+            } else if(isDownvote) {
+                await comment.increment('opdoots', { by: 2}, { transaction: t })
+                await commentOpdoot.setOpdootType(upvote, { transaction: t });
+            } else {
+                await comment.increment('opdoots', { transaction: t })
+                await commentOpdoot.setOpdootType(upvote, { transaction: t });
+            }
+        } else if(req.body.vote == "downvote") {
+            if(isDownvote) {
+                await comment.increment('opdoots', { transaction: t });
+                await commentOpdoot.setOpdootType(null, { transaction: t });
+            } else if(isUpvote) {
+                await comment.decrement('opdoots', { by: 2}, { transaction: t })
+                await commentOpdoot.setOpdootType(downvote, { transaction: t });
+            } else {
+                await comment.decrement('opdoots', { transaction: t })
+                await commentOpdoot.setOpdootType(downvote, { transaction: t });
+            }
+        }
+        await t.commit();
+        res.render('404');
+    } catch (error) {
+        if(t) {
+            await t.rollback();
+        }
+        console.log(error);
+        res.render('404');
+    }
+}
+
