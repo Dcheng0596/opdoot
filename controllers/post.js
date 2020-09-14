@@ -3,6 +3,9 @@ const  { S3_BUCKET_URL } = require('../config/amazon.js');
 const { processTags } = require('../helper/validate-upload');
 const models = require('../db/models');
 const db = require('../db/models/index');
+const { success } = require('../middleware/passport/local-strategy');
+const upvoteId = 1;
+const downvoteId = 2;
  
 exports.get_upload = function(req, res, next) {
     if(req.user == null) {
@@ -143,6 +146,7 @@ exports.get_post = async function(req, res, next) {
 }
 
 exports.post_opdoot = async function(req, res, next) {
+    let t;
     try {
         if(!req.body.vote) {
             throw new Error("Missing body keys")
@@ -156,47 +160,35 @@ exports.post_opdoot = async function(req, res, next) {
             throw new Error("User not logged in")
         }
         let user = req.user;
-        await post.addPostOpdoots(user, { transaction: t });
-        let postOpdoot = await post.getPostOpdoots({
-            where: { id: user.id },
+  
+        let [postOpdoot, created] = await models.PostOpdoot.findOrBuild({
+            where: { UserId: user.id, PostId: post.id},
             transaction: t
         })
-        console.log(postOpdoot[0]);
-        postOpdoot = postOpdoot[0].PostOpdoot;
-        let upvote =  await models.OpdootType.findOne({
-            where: { name: "upvote" },
-            transaction: t
-        });
-        let downvote =  await models.OpdootType.findOne({
-            where: { name: "downvote" },
-            transaction: t
-        });
-        let isUpvote = await upvote.hasPostOpdoot(postOpdoot, { transaction: t })
-        let isDownvote = await downvote.hasPostOpdoot(postOpdoot, { transaction: t })
         if(req.body.vote == "upvote") {
-            if(isUpvote) {
+            if(postOpdoot.OpdootTypeId == upvoteId) {
                 await post.decrement('opdoots', { transaction: t })
-                await postOpdoot.setOpdootType(null, { transaction: t });
-
-            } else if(isDownvote) {
+                postOpdoot.OpdootTypeId = null;
+            } else if(postOpdoot.OpdootTypeId == downvoteId) {
                 await post.increment('opdoots', { by: 2}, { transaction: t })
-                await postOpdoot.setOpdootType(upvote, { transaction: t });
+                postOpdoot.OpdootTypeId = upvoteId;
             } else {
                 await post.increment('opdoots', { transaction: t })
-                await postOpdoot.setOpdootType(upvote, { transaction: t });
+                postOpdoot.OpdootTypeId = upvoteId;
             }
         } else if(req.body.vote == "downvote") {
-            if(isDownvote) {
+            if(postOpdoot.OpdootTypeId == downvoteId) {
                 await post.increment('opdoots', { transaction: t });
-                await postOpdoot.setOpdootType(null, { transaction: t });
-            } else if(isUpvote) {
+                postOpdoot.OpdootTypeId = null;
+            } else if(postOpdoot.OpdootTypeId == 1) {
                 await post.decrement('opdoots', { by: 2}, { transaction: t })
-                await postOpdoot.setOpdootType(downvote, { transaction: t });
+                postOpdoot.OpdootTypeId = downvoteId;
             } else {
                 await post.decrement('opdoots', { transaction: t })
-                await postOpdoot.setOpdootType(downvote, { transaction: t });
+                postOpdoot.OpdootTypeId = downvoteId;
             }
         }
+        postOpdoot.save();
         await t.commit();
         res.render('404');
     } catch (error) {
@@ -209,9 +201,11 @@ exports.post_opdoot = async function(req, res, next) {
 }
 
 exports.post_comment = async function(req, res, next) {
+    let t;
     try {
         if(!req.body.comment) {
-            throw new Error("Missing body keys")
+            throw new 
+            Error("Missing body keys");
         }
         t = await db.sequelize.transaction();
         let post = await models.Post.findOne({
@@ -219,16 +213,26 @@ exports.post_comment = async function(req, res, next) {
             transaction: t
         })
         if(!req.user) {
-            throw new Error("User not logged in")
+            throw new Error("User not logged in");
         }
         let user = req.user;
-        let comment = await models.Comment.create({
+        let parentComment;
+        if(req.body.parentId) {
+            parentComment = await models.Comment.findOne({
+                where: { id: req.body.parentId },
+                transaction: t
+            })
+        }
+        let comment = await post.createComment({
             comment: req.body.comment,
             username: user.username,
             profilePicture: user.profilePicture
-        }, { transaction: t })
-        await post.addComment(comment, { transaction: t });
+        }, { transaction: t });
         await user.addComment(comment, { transaction: t });
+        if(parentComment) {
+            comment.setParent(parentComment, { transaction: t });
+            parentComment.increment("replies");
+        }
         await post.increment('comments', { transaction: t });
         await t.commit();
         res.send(comment.id + "");
@@ -243,29 +247,67 @@ exports.post_comment = async function(req, res, next) {
 
 exports.get_comment = async function(req, res, next) {
     try {
+        if(!req.query.offset || !req.query.offset) {
+            throw new Error("Missing query parameters");
+        }
         let post = await models.Post.findOne({
             where: { file: req.params.id }
         })
         if(post == null) {
             throw new Error("Post does not exist");
         }
+        let parentId = null
+        if(req.query.parentId) {
+            parentId = req.query.parentId;
+        }
         let comments = await post.getComments({
+            where: { ParentId: parentId },
+            paranoid: false,
             offset: req.query.offset,
             limit: req.query.limit
         });
+        for(let i = 0; i < comments.length; i++) {
+            let user = req.user;
+            comments[i] = comments[i].toJSON();
+
+            if(!user) {
+                break;
+            };
+            user.id == comments[i].UserId ? comments[i].isUsers = true : comments[i].isUsers = false; 
+            let commentOpdoot = await models.CommentOpdoot.findOne({
+                where: { UserId: user.id, CommentId: comments[i].id}
+            })
+            if(commentOpdoot == null) {
+                continue;
+            }
+            if(commentOpdoot.OpdootTypeId == null) {
+                continue;
+            }
+            if(commentOpdoot.OpdootTypeId == upvoteId) {
+                comments[i].vote = "upvote"
+                continue;
+            }
+            if(commentOpdoot.OpdootTypeId == downvoteId) {
+                comments[i].vote = "downvote"
+                continue;
+            }
+        }
         res.json({
             comments: comments
         })
     } catch (error) {
         console.log(error);
-        res.render('404');
+        res.json({
+            status: "error"
+        })
     }
 }
 
 exports.post_comment_opdoot = async function(req, res, next) {
+    let t;
     try {
         if(!req.body.vote) {
-            throw new Error("Missing body keys")
+            throw new Error("Missing body keys");
         }
         t = await db.sequelize.transaction();
         let comment = await models.Comment.findOne({
@@ -273,50 +315,38 @@ exports.post_comment_opdoot = async function(req, res, next) {
             transaction: t
         })
         if(!req.user) {
-            throw new Error("User not logged in")
+            throw new Error("User not logged in");
         }
         let user = req.user;
-        await comment.addCommentOpdoots(user, { transaction: t });
-        let commentOpdoot = await comment.getCommentOpdoots({
-            where: { id: user.id },
+  
+        let [commentOpdoot, created] = await models.CommentOpdoot.findOrBuild({
+            where: { UserId: user.id, CommentId: comment.id},
             transaction: t
         })
-        console.log(commentOpdoot[0]);
-        commentOpdoot = commentOpdoot[0].CommentOpdoot;
-        let upvote =  await models.OpdootType.findOne({
-            where: { name: "upvote" },
-            transaction: t
-        });
-        let downvote =  await models.OpdootType.findOne({
-            where: { name: "downvote" },
-            transaction: t
-        });
-        let isUpvote = await upvote.hasCommentOpdoot(commentOpdoot, { transaction: t })
-        let isDownvote = await downvote.hasCommentOpdoot(commentOpdoot, { transaction: t })
         if(req.body.vote == "upvote") {
-            if(isUpvote) {
+            if(commentOpdoot.OpdootTypeId == upvoteId) {
                 await comment.decrement('opdoots', { transaction: t })
-                await commentOpdoot.setOpdootType(null, { transaction: t });
-
-            } else if(isDownvote) {
+                commentOpdoot.OpdootTypeId = null;
+            } else if(commentOpdoot.OpdootTypeId == downvoteId) {
                 await comment.increment('opdoots', { by: 2}, { transaction: t })
-                await commentOpdoot.setOpdootType(upvote, { transaction: t });
+                commentOpdoot.OpdootTypeId = upvoteId;
             } else {
                 await comment.increment('opdoots', { transaction: t })
-                await commentOpdoot.setOpdootType(upvote, { transaction: t });
+                commentOpdoot.OpdootTypeId = upvoteId;
             }
         } else if(req.body.vote == "downvote") {
-            if(isDownvote) {
+            if(commentOpdoot.OpdootTypeId == downvoteId) {
                 await comment.increment('opdoots', { transaction: t });
-                await commentOpdoot.setOpdootType(null, { transaction: t });
-            } else if(isUpvote) {
+                commentOpdoot.OpdootTypeId = null;
+            } else if(commentOpdoot.OpdootTypeId == 1) {
                 await comment.decrement('opdoots', { by: 2}, { transaction: t })
-                await commentOpdoot.setOpdootType(downvote, { transaction: t });
+                commentOpdoot.OpdootTypeId = downvoteId;
             } else {
                 await comment.decrement('opdoots', { transaction: t })
-                await commentOpdoot.setOpdootType(downvote, { transaction: t });
+                commentOpdoot.OpdootTypeId = downvoteId;
             }
         }
+        commentOpdoot.save();
         await t.commit();
         res.render('404');
     } catch (error) {
@@ -325,6 +355,48 @@ exports.post_comment_opdoot = async function(req, res, next) {
         }
         console.log(error);
         res.render('404');
+    }
+}
+
+exports.delete_comment = async function(req, res, next) {
+    let t;
+    try {
+        t = await db.sequelize.transaction();
+        let user = req.user;
+        if(!user) {
+            throw new Error("User not logged in");
+        }
+        let comment = await models.Comment.findOne({
+            where: { 
+                id: req.params.id,
+                UserId: user.id
+            }, transaction: t
+        });
+        if(!comment) {
+            new Error("Comment does not exist")
+        };
+        let post = await comment.getPost();
+        let paranoid = false;
+        if(comment.replies == 0) {
+            paranoid = true;
+            await post.decrement("comments", { transaction: t });
+        }
+        if(comment.ParentId != null) {
+            let parent = await comment.getParent({ transaction: t });
+            await parent.decrement("replies", { transaction: t });
+        }
+        await comment.destroy({ 
+            force: paranoid,
+            transaction: t
+        });
+        await t.commit();
+        res.send("success")
+    } catch (error) {
+        if(t) {
+            await t.rollback();
+        }
+        res.render('404');
+        console.log(error);
     }
 }
 

@@ -17,7 +17,11 @@ module.exports = (sequelize, DataTypes) => {
       Comment.belongsTo(models.User);
       Comment.belongsToMany(models.User, { as: 'commentOpdoots', through: models.CommentOpdoot });
       Comment.belongsTo(models.Post);
-      Comment.hasMany(models.Comment);
+      Comment.belongsTo(models.Comment, {
+        as: "Parent",
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
+      });
     }
   };
   Comment.init({
@@ -54,6 +58,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Comment',
+    paranoid: true
   });
   return Comment;
 };

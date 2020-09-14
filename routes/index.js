@@ -32,8 +32,10 @@ router.post('/upload', post.post_upload);
 router.get('/post/:id', viewed, post.get_post);
 router.post('/post/:id/opdoot', post.post_opdoot);
 router.post('/post/:id/comment', post.post_comment);
-router.post('/comment/:id/opdoot', post.post_comment_opdoot);
 router.get('/post/:id/comment', post.get_comment);
+router.post('/comment/:id/opdoot', post.post_comment_opdoot);
+router.delete('/comment/:id', post.delete_comment);
+
 
 
 

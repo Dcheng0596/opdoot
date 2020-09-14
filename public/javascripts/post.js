@@ -3,10 +3,6 @@ let upvote = document.getElementById("button-up");
 let downvote = document.getElementById("button-down");
 let opdoots = document.getElementById("opdoots");
 let opdootContainer = document.getElementById("opdoot-container");
-let postComment = document.getElementById("post-comment");
-let commentArea = document.getElementById("comment-area");
-let commentSection = document.getElementById("comment-section");
-let postComments = document.getElementById("comments");
 
 function mediaEvent(mediaQuery) {
     let commentSection = document.getElementById("comment-section");
@@ -86,28 +82,46 @@ function opdoot(upvote, downvote, opdootContainer, opdoots, url) {
 
 opdoot(upvote, downvote, opdootContainer, opdoots, ("/post/" + file + "/opdoot"));
 
-let commentChar = document.getElementById("comment-char");
 let commentMaxChar = 150;
-let canPost = false;
 
-function commentAreaEvent(commentArea) {
-    if(commentArea.value == '') {
-        postComment.disabled = true;
-    } else {
-        postComment.disabled = false;
-    }
+function commentAreaEvent(commentArea, submitButton, commentChar) {
+    commentArea.value.trim() == '' ? submitButton.disabled = true : submitButton.disabled = false;
     commentChar.innerText = commentArea.value.length + "/" + commentMaxChar;
-    commentArea.style.height = "";
-    commentArea.style.height = commentArea.scrollHeight + 2 + "px";
 }
 
-if(commentArea) {
-    commentArea.addEventListener("input", function() {
-        commentAreaEvent(this);
+function toggleReplies(toggler, comment, id=null) {
+    toggler.addEventListener("click", function() {
+        let replies = comment.querySelector(".replies")
+        let loadMore = comment.querySelector(".load-replies");
+        let numReplies = replies.children.length;
+        numReplies == 0 ? toggler.innerText = "Hide reply" : toggler.innerText =  "Hide " + (numReplies + 1) + " replies";
+        if(replies.hidden == false) {
+            replies.hidden = true;
+            toggler.innerText = toggler.innerText.replace("Hide", "View");
+            return;
+        }
+        replies.hidden = false;
+        toggler.innerText = toggler.innerText.replace("View", "Hide");
+        if(replies.children.length == 0 && id) {
+            loadComments(replies, loadMore, 10, id);
+        }
     });
- 
-    postComment.addEventListener("click", async function(){
-        let text = commentArea.value;
+}
+
+function writeCommentSetup(writeCommentArea, destination, parentId=null) {
+    let submitButton = writeCommentArea.querySelector(".post-comment");
+    let commentArea = writeCommentArea.querySelector(".comment-area");
+    let commentChar = writeCommentArea.querySelector(".comment-char");
+
+    commentArea.addEventListener("input", function() {
+        commentAreaEvent(this, submitButton, commentChar);
+        commentArea.style.height = commentArea.scrollHeight + 2 + "px";
+
+    });
+    commentAreaEvent(commentArea, submitButton, commentChar);
+
+    submitButton.addEventListener("click", async function(){
+        let text = commentArea.value.trim();
         if(text == '' && !text) {
             return;
         }
@@ -115,20 +129,44 @@ if(commentArea) {
             let body = {
                 comment: text
             }
+            if(parentId) {
+                body.parentId = parentId
+            }
             const response =  await fetch("/post/" + file + "/comment", {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify(body)
-            });    
+            });
             let commentId = await response.text();
+            if (!typeof parseInt(commentId) == 'number') {
+                return;
+            }
             let comment = document.getElementById("user-comment-hidden").cloneNode(true);
             comment.removeAttribute("id");
             comment.classList.add("user-comment");
             comment.querySelector(".comment-text").innerText = text;
             comment.setAttribute("data-comment-id", commentId)
-            postComments.prepend(comment);
+            opdoot(
+                comment.querySelector(".comment-button-up"),
+                comment.querySelector(".comment-button-down"),
+                comment.querySelector(".comment-opdoot-container"),
+                comment.querySelector(".comment-opdoots"),
+                "/comment/" + commentId + "/opdoot"
+            )
+            if(parentId) {
+                writeCommentArea.hidden = true;
+                comment.querySelector(".reply-comment").remove();
+                destination.hidden = false;
+                let parent = document.querySelector("[data-comment-id='" + parentId + "']");
+                let toggle = parent.querySelector(".toggle-replies");
+                toggle.hidden = false;
+                toggleReplies(toggle, parent);
+                loadComments(destination, comment.querySelector(".load-replies"), 10, parentId);
+            } else {
+                destination.prepend(comment);
+            }
             commentArea.value = ''; 
             commentChar.innerText = 0 + "/" + commentMaxChar;
         } catch (error) {
@@ -137,52 +175,146 @@ if(commentArea) {
     });
 }
 
-let commentOffset = 0;
-let commentLimit = 20;
+let userComments = [];
+let deleteCommentId;
 
-function createComment(model) {
+function createComment(model, destination) {
     let comment = document.getElementById("user-comment-hidden").cloneNode(true);
+    let commentOpdoots = comment.querySelector(".comment-opdoots");
+    let commentOpdootContainer = comment.querySelector(".comment-opdoot-container")
+    let toggle = comment.querySelector(".toggle-replies");
+
     comment.removeAttribute("id");
     comment.classList.add("user-comment");
     comment.querySelector(".comment-text").innerText = model.comment;
     comment.querySelector(".profile-picture").setAttribute("src", model.profilePicture);
     comment.querySelector(".comment-username").innerText = model.username;
     comment.querySelector(".timeago").innerText = model.timeago;
-    comment.querySelector(".comment-opdoots").innerText = model.opdoots;
-    comment.setAttribute("data-comment-id", model.id)
+    commentOpdoots.innerText = model.opdoots;
+    comment.setAttribute("data-comment-id", model.id);
+    if(model.isUsers) {
+        comment.querySelector(".options").hidden = false;
+        userComments.push(model.id);
+        comment.querySelector(".show-delete-modal").addEventListener("click", function() {
+            deleteCommentId = model.id;
+            console.log(deleteCommentId);
+        });
+    } else {
+        comment.querySelector(".options").hidden = true;
+    }
+    if(model.replies == 0) {
+        toggle.hidden = true;
+    } else {
+        if(model.replies == 1) {
+            toggle.innerText = "View reply";
+        } else if(model.replies > 1) {
+            toggle.innerText = "View " + model.replies + " replies";
+        }
+        toggleReplies(toggle, comment, model.id);
+    }
+    if(model.vote) {
+        commentOpdootContainer.classList.add(model.vote);
+    } 
+    let replyComment = comment.querySelector(".reply-comment");
+    let createComment = comment.querySelector(".create-comment");
+    if(commentOpdoots.classList.contains("novote")) {
+        replyComment.addEventListener("click", function() {
+            location.href = '/login';
+        });
+    } else {
+        comment.querySelector(".cancel-comment").addEventListener("click", function() {
+            createComment.hidden = true;
+        });
+        model.CommentId != null ? replyComment.remove() :
+        replyComment.addEventListener("click", function() {
+            createComment.hidden = false;
+        });
+        writeCommentSetup(createComment, comment.querySelector(".replies"), model.id);
+    }
+    
     opdoot(
         comment.querySelector(".comment-button-up"),
         comment.querySelector(".comment-button-down"),
-        comment.querySelector(".comment-opdoot-container"),
-        comment.querySelector(".comment-opdoots"),
+        commentOpdootContainer,
+        commentOpdoots,
         "/comment/" + model.id + "/opdoot"
     )
-
-    postComments.append(comment);
+    
+    destination.append(comment);
 }
 
-window.onload =  async function() {
-    if(commentArea) {
-        commentAreaEvent(commentArea);
-    }
+async function loadComments(destination, loadMore, limit, parentId) {
+    let offset = destination.querySelectorAll(".user-comment").length;
+    let url = "/post/" + file + "/comment?offset=" + offset + "&limit=" + limit;
+    if(parentId) {
+        url = url + "&parentId=" + parentId;
+    } 
+    let inner = document.createElement("div");
+    inner.classList.add("spinner-border");
     let spinner = document.createElement("div");
-    spinner.classList.add("spinner-border");
-    spinner.classList.add("mx-auto");
-    postComments.append(spinner);
+    spinner.append(inner);
+    spinner.classList.add("text-center");
+    destination.append(spinner);
     try {
-
-        const response =  await fetch("/post/" + file + "/comment?offset=" + commentOffset + "&limit=" + commentLimit, {
+        const response =  await fetch(url, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
             },
         });    
         let comments = await response.json();
-        postComments.removeChild(spinner);
+        if(comments.status) {
+            return;
+        }
+        spinner.remove();
         for(comment of comments.comments) {
-            createComment(comment);
+            createComment(comment, destination);
+        }
+        if(comments.comments.length < limit) {
+            loadMore.hidden = true;
         }
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
+}
+
+async function deleteComment() {
+    if(userComments.includes(deleteCommentId)) {
+        try {
+            const response =  await fetch("/comment/" + deleteCommentId, {
+                method: 'DELETE',
+            });
+            const status = await response.text();
+            if(status == "success") {
+                document.querySelector("[data-comment-id='" + deleteCommentId + "']").remove();
+                $('#delete-comment-modal').modal('hide');
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
+}
+
+window.onload =  function() {
+    let writeComment = document.getElementById("create-comment");
+    let destination = document.getElementById("comments");
+    let loadMore = document.getElementById("load-comments");
+    
+    const commentLoadLimit = 20;
+
+    if(writeComment) {
+        writeCommentSetup(writeComment, destination);
+    };
+
+    loadComments(destination, loadMore, commentLoadLimit);
+
+    loadMore.addEventListener("click", function() {
+        loadComments(destination, loadMore, commentLoadLimit);
+    });
+
+    document.getElementById("delete-comment").addEventListener("click", function() {
+        deleteComment();
+    })
 };
+
+

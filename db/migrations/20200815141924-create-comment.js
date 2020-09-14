@@ -12,16 +12,20 @@ module.exports = {
       },
       PostId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
         references: {
           model: 'Posts',
-          key: 'id'
+          key: 'id',
         }
       },
-      CommentId: {
+      ParentId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
         references: {
           model: 'Comments',
-          key: 'id'
+          key: 'id',
         }
       },
       opdoots: {
@@ -50,6 +54,8 @@ module.exports = {
       },
       UserId: {
         type: Sequelize.INTEGER,
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE',
         references: {
           model: 'Users',
           key: 'id'
@@ -61,6 +67,9 @@ module.exports = {
       },
       updatedAt: {
         allowNull: false,
+        type: Sequelize.DATE
+      },
+      deletedAt: {
         type: Sequelize.DATE
       }
     });

@@ -99,6 +99,16 @@ nav .profile-picture {
 .post .profile-picture {
   border-radius: 50%; }
 
+.post button {
+  border: none;
+  outline: none; }
+
+.post .upvote .thumb-up {
+  filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%); }
+
+.post .downvote .thumb-down {
+  filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%); }
+
 .post .username {
   color: black;
   font-weight: bold; }
@@ -122,9 +132,6 @@ nav .profile-picture {
   margin-bottom: .7rem;
   text-transform: lowercase; }
 
-.post button {
-  border: none; }
-
 @media only screen and (min-width: 992px) {
   .post-info {
     position: sticky;
@@ -141,6 +148,9 @@ nav .profile-picture {
 #comment-section #user-comment-hidden {
   display: none !important; }
 
+#comment-section [hidden] {
+  display: none !important; }
+
 #comment-section .comment-username {
   font-weight: bold; }
 
@@ -149,8 +159,23 @@ nav .profile-picture {
   #comment-section #signin a {
     text-decoration: none; }
 
-#comment-section button {
-  border: none; }
+#comment-section .toggle-replies {
+  background: none; }
+
+#comment-section .options {
+  display: none;
+  background: none;
+  margin-top: -4px;
+  transition: margin-top .1s; }
+  #comment-section .options:hover {
+    margin-top: -6px; }
+
+#comment-section .comment-body:hover .options {
+  display: inherit; }
+
+#comment-section .dropdown-item:active {
+  background: gainsboro;
+  color: black; }
 
 footer {
   height: 60px;

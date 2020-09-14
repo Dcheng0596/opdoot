@@ -152,6 +152,23 @@ $image-width: 400px;
     border-radius: 50%;
   } 
 
+  button{
+      border: none;
+      outline:none;
+  }
+
+  .upvote {
+    .thumb-up {
+      filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
+    }
+  }
+
+  .downvote {
+    .thumb-down {
+      filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
+    }
+  }
+
   .username {
     color: black;
     font-weight: bold;
@@ -179,10 +196,6 @@ $image-width: 400px;
     margin-bottom: .7rem;
     text-transform: lowercase;
   }
-
-  button {
-    border: none;
-  }
 }
 
 @media only screen and (min-width: 992px) {
@@ -209,6 +222,10 @@ $image-width: 400px;
     display: none !important;
   }
 
+  [hidden]{
+    display: none !important;
+  }
+
   .comment-username {
     font-weight: bold;
   }
@@ -220,8 +237,29 @@ $image-width: 400px;
     }
   }
 
-  button {
-    border: none;
+  .toggle-replies {
+    background: none;
+  }
+ 
+  .options {
+    display: none;
+    background: none;
+    margin-top: -4px;
+    transition: margin-top .1s;
+    &:hover {
+      margin-top: -6px;
+    }
+  }
+
+  .comment-body:hover{
+    .options { 
+      display: inherit;
+    }
+  }
+
+  .dropdown-item:active {
+    background: gainsboro;
+    color: black;
   }
 }
 

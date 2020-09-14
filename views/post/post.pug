@@ -18,10 +18,10 @@ html(lang='en')
               span.mx-2 #{post.comments} Comments
               #opdoot-container(class=opdootType)
                 button#button-up.bg-white
-                  img(src="/images/opdoot/up.svg" width="25" alt="upvote")
+                  img.thumb-up(src="/images/opdoot/up.svg" width="25" alt="upvote")
                 span#opdoots.mx-1= post.opdoots
                 button#button-down.bg-white
-                  img(src="/images/opdoot/down.svg" width="25" alt="upvote")
+                  img.thumb-down(src="/images/opdoot/down.svg" width="25" alt="upvote")
             if tags
               .d-flex.mt-4.flex-wrap
                 for tag in tags
@@ -36,35 +36,59 @@ html(lang='en')
                   a(href="/login")  Login 
                   | to post a comment
               else
-                .d-flex.flex-column
+                #create-comment.d-flex.flex-column
                   .d-flex
                     .posted-by.mr-3
                       a(href="") 
                         img.profile-picture(src=poster.profilePicture, alt=poster.username width="50" height="50")
                     .d-flex.flex-column.w-100
-                      textarea#comment-area.form-control(placeholder="Comment..." maxlength="200" type="text" name="comment")
-                      span#comment-char.d-block.small 0/150
-                  button#post-comment.btn.btn-primary.align-self-end Comment
+                      textarea.comment-area.form-control(placeholder="Comment..." maxlength="200" type="text" name="comment")
+                      .d-flex.justify-content-between
+                        span.comment-char.d-block.small 0/150
+                        button.post-comment.btn.btn-primary.align-self-end.mt-2 Comment
             .card.border-0.mt-3.mb-4.p-4.bg-white.shadow
               #comment-section-bar.d-flex
                 h5.h5 #{post.comments} Comments
               #comments.d-flex.flex-column 
-                #user-comment-hidden.media.mt-4(data-comment-id="")
+                #user-comment-hidden.media.mt-3(data-comment-id="")
                   .posted-by.mr-3
                     a(href="") 
                       img.profile-picture(src=user ? user.profilePicture : "", alt=poster.username width="50" height="50")
                   .media-body
-                    span.comment-username= user ? user.username : ""
-                    .comment-text.mb-1
-                    .comment-bar.d-flex.justify-content-between
-                      .comment-opdoot-container.align-self-center(class= user ? "" : "novote")
-                        button.comment-button-up.bg-white
-                          img(src="/images/opdoot/up.svg" width="20" alt="upvote")
-                        span.comment-opdoots.mx-1 0
-                        button.comment-button-down.bg-white
-                          img(src="/images/opdoot/down.svg" width="20" alt="upvote")
-                        span.timeago.small.text-muted a few seconds ago
-                      button#post-comment.btn.btn-primary.btn-sm.align-self-end Reply
+                    .comment-body
+                      .d-flex.justify-content-between
+                        span.comment-username= user ? user.username : ""
+                        button.options(data-toggle="dropdown" hidden)
+                          img(width="22" src="/images/ellipses.svg" alt="options")
+                        .dropdown-menu.dropdown-menu-right.shadow-sm(aria-labelledby='dropdownMenuButton')
+                          button.show-delete-modal.dropdown-item(data-toggle="modal" data-target="#delete-comment-modal") Delete
+                      .comment-text.mb-1
+                      .comment-bar.d-flex.justify-content-between.mb-2
+                        .comment-opdoot-container.align-self-center(class= user ? "" : "novote")
+                          button.comment-button-up.bg-white
+                            img.thumb-up(src="/images/opdoot/up.svg" width="20" alt="upvote")
+                          span.comment-opdoots.mx-1 0
+                          button.comment-button-down.bg-white
+                            img.thumb-down(src="/images/opdoot/down.svg" width="20" alt="upvote")
+                          span.timeago.small.text-muted a few seconds ago
+                          button.toggle-replies.small.text-muted.ml-2 
+                        button.reply-comment.btn.btn-primary.btn-sm.align-self-end Reply
+                    .create-comment.d-flex.flex-column(hidden)
+                      .d-flex
+                        .posted-by.mr-3
+                          a(href="") 
+                            img.profile-picture(src=poster.profilePicture, alt=poster.username width="50" height="50")
+                        .d-flex.flex-column.w-100
+                          textarea.comment-area.form-control(placeholder="Comment..." maxlength="200" type="text" name="comment")
+                          .d-flex.justify-content-between
+                            span.comment-char.d-block.small 0/150
+                            div.mt-2
+                              button.cancel-comment.btn.btn-primary.align-self-end.mr-3 Cancel
+                              button.post-comment.btn.btn-primary.align-self-end Comment
+                    .replies(hidden)
+                    .d-flex.justify-content-center
+                      button.load-replies.btn.btn-primary.btn-sm(hidden) Load More
+              button#load-comments.btn.btn-primary.mt-4.mx-auto Load More
         .col.post-info-container
           .card.border-0.mt-3.p-4.bg-white.shadow.post-info
             if title
@@ -81,6 +105,17 @@ html(lang='en')
                 time(datetime=post.createdAt).mr-2= post.createdAt.toLocaleDateString(undefined, { day: 'numeric' , month: 'short' , year: 'numeric'})    
       .row
         .col-12.col-lg-7#mobile-view
+      #delete-comment-modal.modal.fade.shadow-lg(tabindex='-1' role='dialog' aria-labelledby='deleteCommentModal' aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+          .modal-content
+            .modal-header
+              h5#exampleModalLongTitle.modal-title Delete Comment
+              button.close(type='button' data-dismiss='modal' aria-label='Close')
+            .modal-body
+              | Are you sure you want to delete this comment?
+            .modal-footer
+              button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+              button#delete-comment.btn.btn-primary(type='button') Delete
         
         
   +footer("post")
