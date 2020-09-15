@@ -156,6 +156,18 @@ $image-width: 400px;
       border: none;
       outline:none;
   }
+  .thumb-up, .thumb-down{
+    transition: margin-top .1s;
+
+    &:hover, &:hover{
+      margin-top: -3px;
+    }
+    &:active, &:active{
+      filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
+    }
+  }
+
+  
 
   .upvote {
     .thumb-up {

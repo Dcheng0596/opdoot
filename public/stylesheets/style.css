@@ -103,6 +103,13 @@ nav .profile-picture {
   border: none;
   outline: none; }
 
+.post .thumb-up, .post .thumb-down {
+  transition: margin-top .1s; }
+  .post .thumb-up:hover, .post .thumb-up:hover, .post .thumb-down:hover, .post .thumb-down:hover {
+    margin-top: -3px; }
+  .post .thumb-up:active, .post .thumb-up:active, .post .thumb-down:active, .post .thumb-down:active {
+    filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%); }
+
 .post .upvote .thumb-up {
   filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%); }
 
