@@ -93,13 +93,15 @@ function toggleReplies(toggler, comment, id=null) {
     toggler.addEventListener("click", function() {
         let replies = comment.querySelector(".replies")
         let loadMore = comment.querySelector(".load-replies");
-        let numReplies = replies.children.length;
-        numReplies == 0 ? toggler.innerText = "Hide reply" : toggler.innerText =  "Hide " + (numReplies + 1) + " replies";
+        console.log("click11");
         if(replies.hidden == false) {
             replies.hidden = true;
             toggler.innerText = toggler.innerText.replace("Hide", "View");
+            console.log("click22");
             return;
         }
+        console.log("click33");
+
         replies.hidden = false;
         toggler.innerText = toggler.innerText.replace("View", "Hide");
         if(replies.children.length == 0 && id) {
@@ -108,7 +110,7 @@ function toggleReplies(toggler, comment, id=null) {
     });
 }
 
-function writeCommentSetup(writeCommentArea, destination, parentId=null) {
+function writeCommentSetup(writeCommentArea, destination, loadMore, parentId=null) {
     let submitButton = writeCommentArea.querySelector(".post-comment");
     let commentArea = writeCommentArea.querySelector(".comment-area");
     let commentChar = writeCommentArea.querySelector(".comment-char");
@@ -139,36 +141,35 @@ function writeCommentSetup(writeCommentArea, destination, parentId=null) {
                 },
                 body: JSON.stringify(body)
             });
-            let commentId = await response.text();
-            if (!typeof parseInt(commentId) == 'number') {
+            let resJson = await response.json();
+            if (!resJson.comment) {
                 return;
             }
-            let comment = document.getElementById("user-comment-hidden").cloneNode(true);
-            comment.removeAttribute("id");
-            comment.classList.add("user-comment");
-            comment.querySelector(".comment-text").innerText = text;
-            comment.setAttribute("data-comment-id", commentId)
-            opdoot(
-                comment.querySelector(".comment-button-up"),
-                comment.querySelector(".comment-button-down"),
-                comment.querySelector(".comment-opdoot-container"),
-                comment.querySelector(".comment-opdoots"),
-                "/comment/" + commentId + "/opdoot"
-            )
+            let comment = createComment(resJson.comment, loadMore);
             if(parentId) {
-                writeCommentArea.hidden = true;
-                comment.querySelector(".reply-comment").remove();
-                destination.hidden = false;
                 let parent = document.querySelector("[data-comment-id='" + parentId + "']");
                 let toggle = parent.querySelector(".toggle-replies");
+                let numReplies;
+
+                if(toggle.innerText == "") {
+                    numReplies = 0
+                } else {
+                    numReplies = toggle.innerText.replace(/[^0-9]/g,'');
+                    !numReplies ? numReplies = 1 : numReplies = parseInt(numReplies);
+                    loadComments(destination, loadMore, 10, parentId)
+                }
+                numReplies == 0 ? toggle.innerText = "Hide Reply" : toggle.innerText = "Hide " + (numReplies + 1) + " replies";
+
+                //toggleReplies(toggle, parent);
                 toggle.hidden = false;
-                toggleReplies(toggle, parent);
-                loadComments(destination, comment.querySelector(".load-replies"), 10, parentId);
+
+                destination.hidden = false;
+                parent.querySelector(".create-comment").hidden = true;
             } else {
                 destination.prepend(comment);
+
             }
-            commentArea.value = ''; 
-            commentChar.innerText = 0 + "/" + commentMaxChar;
+            
         } catch (error) {
             console.log(error)
         }
@@ -178,7 +179,7 @@ function writeCommentSetup(writeCommentArea, destination, parentId=null) {
 let userComments = [];
 let deleteCommentId;
 
-function createComment(model, destination) {
+function createComment(model, loadMore) {
     let comment = document.getElementById("user-comment-hidden").cloneNode(true);
     let commentOpdoots = comment.querySelector(".comment-opdoots");
     let commentOpdootContainer = comment.querySelector(".comment-opdoot-container")
@@ -192,16 +193,17 @@ function createComment(model, destination) {
     comment.querySelector(".timeago").innerText = model.timeago;
     commentOpdoots.innerText = model.opdoots;
     comment.setAttribute("data-comment-id", model.id);
+
     if(model.isUsers) {
         comment.querySelector(".options").hidden = false;
         userComments.push(model.id);
         comment.querySelector(".show-delete-modal").addEventListener("click", function() {
             deleteCommentId = model.id;
-            console.log(deleteCommentId);
         });
     } else {
         comment.querySelector(".options").hidden = true;
     }
+
     if(model.replies == 0) {
         toggle.hidden = true;
     } else {
@@ -212,11 +214,13 @@ function createComment(model, destination) {
         }
         toggleReplies(toggle, comment, model.id);
     }
+
     if(model.vote) {
         commentOpdootContainer.classList.add(model.vote);
     } 
     let replyComment = comment.querySelector(".reply-comment");
     let createComment = comment.querySelector(".create-comment");
+
     if(commentOpdoots.classList.contains("novote")) {
         replyComment.addEventListener("click", function() {
             location.href = '/login';
@@ -225,13 +229,16 @@ function createComment(model, destination) {
         comment.querySelector(".cancel-comment").addEventListener("click", function() {
             createComment.hidden = true;
         });
-        model.CommentId != null ? replyComment.remove() :
-        replyComment.addEventListener("click", function() {
-            createComment.hidden = false;
-        });
-        writeCommentSetup(createComment, comment.querySelector(".replies"), model.id);
+        if(model.ParentId != null) {
+            replyComment.remove();
+        } else {
+            replyComment.addEventListener("click", function() {
+                createComment.hidden = false;
+            });
+            writeCommentSetup(createComment, comment.querySelector(".replies"), loadMore, model.id);
+        }
     }
-    
+
     opdoot(
         comment.querySelector(".comment-button-up"),
         comment.querySelector(".comment-button-down"),
@@ -239,8 +246,8 @@ function createComment(model, destination) {
         commentOpdoots,
         "/comment/" + model.id + "/opdoot"
     )
-    
-    destination.append(comment);
+        
+    return comment;
 }
 
 async function loadComments(destination, loadMore, limit, parentId) {
@@ -268,7 +275,7 @@ async function loadComments(destination, loadMore, limit, parentId) {
         }
         spinner.remove();
         for(comment of comments.comments) {
-            createComment(comment, destination);
+            destination.append(createComment(comment, loadMore))
         }
         if(comments.comments.length < limit) {
             loadMore.hidden = true;
@@ -294,16 +301,16 @@ async function deleteComment() {
         }
     }
 }
+const commentLoadLimit = 20;
 
 window.onload =  function() {
     let writeComment = document.getElementById("create-comment");
     let destination = document.getElementById("comments");
     let loadMore = document.getElementById("load-comments");
     
-    const commentLoadLimit = 20;
 
     if(writeComment) {
-        writeCommentSetup(writeComment, destination);
+        writeCommentSetup(writeComment, destination, loadMore);
     };
 
     loadComments(destination, loadMore, commentLoadLimit);

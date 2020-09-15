@@ -235,7 +235,9 @@ exports.post_comment = async function(req, res, next) {
         }
         await post.increment('comments', { transaction: t });
         await t.commit();
-        res.send(comment.id + "");
+        comment = comment.toJSON();
+        comment.isUsers = true;
+        res.json({ comment: comment });
     } catch (error) {
         if(t) {
             await t.rollback();
