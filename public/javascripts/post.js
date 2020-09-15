@@ -93,19 +93,19 @@ function toggleReplies(toggler, comment, id=null) {
     toggler.addEventListener("click", function() {
         let replies = comment.querySelector(".replies")
         let loadMore = comment.querySelector(".load-replies");
-        console.log("click11");
         if(replies.hidden == false) {
             replies.hidden = true;
             toggler.innerText = toggler.innerText.replace("Hide", "View");
-            console.log("click22");
             return;
         }
-        console.log("click33");
-
         replies.hidden = false;
         toggler.innerText = toggler.innerText.replace("View", "Hide");
         if(replies.children.length == 0 && id) {
-            loadComments(replies, loadMore, 10, id);
+            loadComments(replies, loadMore, replyLoadLimit, id);
+            loadMore.addEventListener("click", function() {
+                loadComments(replies, loadMore, replyLoadLimit, id);
+            });
+        
         }
     });
 }
@@ -156,11 +156,10 @@ function writeCommentSetup(writeCommentArea, destination, loadMore, parentId=nul
                 } else {
                     numReplies = toggle.innerText.replace(/[^0-9]/g,'');
                     !numReplies ? numReplies = 1 : numReplies = parseInt(numReplies);
-                    loadComments(destination, loadMore, 10, parentId)
+                    loadComments(destination, loadMore, replyLoadLimit, parentId)
                 }
                 numReplies == 0 ? toggle.innerText = "Hide Reply" : toggle.innerText = "Hide " + (numReplies + 1) + " replies";
 
-                //toggleReplies(toggle, parent);
                 toggle.hidden = false;
 
                 destination.hidden = false;
@@ -279,7 +278,9 @@ async function loadComments(destination, loadMore, limit, parentId) {
         }
         if(comments.comments.length < limit) {
             loadMore.hidden = true;
+            return;
         }
+        loadMore.hidden = false;
     } catch (error) {
         console.log(error);
     }
@@ -302,6 +303,7 @@ async function deleteComment() {
     }
 }
 const commentLoadLimit = 20;
+const replyLoadLimit = 10;
 
 window.onload =  function() {
     let writeComment = document.getElementById("create-comment");
