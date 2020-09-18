@@ -187,6 +187,7 @@ function createComment(model, loadMore) {
     comment.removeAttribute("id");
     comment.classList.add("user-comment");
     comment.querySelector(".comment-text").innerText = model.comment;
+    comment.querySelector(".user-link").href = "/user/" + model.username;
     comment.querySelector(".profile-picture").setAttribute("src", model.profilePicture);
     comment.querySelector(".comment-username").innerText = model.username;
     comment.querySelector(".timeago").innerText = model.timeago;
@@ -264,9 +265,6 @@ async function loadComments(destination, loadMore, limit, parentId) {
     try {
         const response =  await fetch(url, {
             method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
         });    
         let comments = await response.json();
         if(comments.status) {

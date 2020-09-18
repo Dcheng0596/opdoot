@@ -1,4 +1,5 @@
 
+let sequelize = require("sequelize");
 let models = require("../db/models");
 let bcrypt = require("bcrypt");
 const passport = require('passport');
@@ -96,4 +97,101 @@ exports.google_cb = function(req, res, next) {
         failureRedirect: "/signup",
         failureFlash: true
     })(req, res, next);
+}
+
+exports.get_user = async function(req, res, next) {
+    try {
+        let user = req.user;
+        let profile = await models.User.findOne({
+            where: sequelize.where(
+                sequelize.fn('lower', sequelize.col('username')), 
+                sequelize.fn('lower', req.params.username)
+            )
+        })
+        if(!profile) {
+            throw new Error("User does not exist");
+        }
+        if(!req.viewed) {
+            if(req.viewed == req.orginalUrl) {
+                await profile.increment("views");
+            }
+        }
+        res.render('user/post', { 
+            user: user,
+            profile: profile
+        });
+    } catch (error) {
+        console.log(error);
+        res.render('404')
+    }
+}
+
+exports.get_opdoot = async function(req, res, next) {
+    try {
+        let user = req.user;
+        let profile = await models.User.findOne({
+            where: sequelize.where(
+                sequelize.fn('lower', sequelize.col('username')), 
+                sequelize.fn('lower', req.params.username)
+            )
+        })
+        if(!profile) {
+            throw new Error("User does not exist");
+        }
+        res.render('user/opdoot', { 
+            user: user,
+            profile: profile
+        });
+    } catch (error) {
+        console.log(error);
+        res.render('404')
+    }
+}
+
+exports.get_post = async function(req, res, next) {
+    try {
+        let user = await models.User.findOne({
+            where: sequelize.where(
+                sequelize.fn('lower', sequelize.col('username')), 
+                sequelize.fn('lower', req.params.username)
+            )
+        })
+        let posts = await user.getPosts({
+            offset: req.query.offset,
+            limit: req.query.limit
+        });
+
+        res.json({
+            posts: posts
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({
+            status: "error"
+        })
+    }
+}
+
+exports.get_opdoots = async function(req, res, next) {
+    try {
+        let user = await models.User.findOne({
+            where: sequelize.where(
+                sequelize.fn('lower', sequelize.col('username')), 
+                sequelize.fn('lower', req.params.username)
+            )
+        })
+        let posts = await user.getPostOpdoots({
+            offset: req.query.offset,
+            limit: req.query.limit,
+        });
+        console.log(posts[0].toJSON());
+        res.json({
+            posts: posts
+        })
+    } catch (error) {
+        console.log(error);
+        res.json({
+            status: "error"
+        })
+    }
 }

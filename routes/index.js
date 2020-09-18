@@ -36,6 +36,13 @@ router.get('/post/:id/comment', post.get_comment);
 router.post('/comment/:id/opdoot', post.post_comment_opdoot);
 router.delete('/comment/:id', post.delete_comment);
 
+router.get('/user/:username', viewed, user.get_user)
+router.get('/user/:username/posts', user.get_user)
+router.get('/user/:username/opdoots', user.get_opdoot)
+router.get('/user/:username/post/get', user.get_post)
+router.get('/user/:username/opdoot/get', user.get_opdoots)
+
+
 
 
 

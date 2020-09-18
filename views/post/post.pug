@@ -52,7 +52,7 @@ html(lang='en')
               #comments.d-flex.flex-column 
                 #user-comment-hidden.media.mt-3(data-comment-id="")
                   .posted-by.mr-3
-                    a(href="") 
+                    a.user-link(href="") 
                       img.profile-picture(src=user ? user.profilePicture : "", alt=poster.username width="50" height="50")
                   .media-body
                     .comment-body
@@ -97,9 +97,9 @@ html(lang='en')
               p.mt-2= description
             .d-flex.position-relative.mt-1.align-items-center.justify-content-between
               .posted-by
-                a(href="") 
+                a(href="/user/" + poster.username) 
                   img.profile-picture(src=poster.profilePicture, alt=poster.username width="40" height="40")
-                a.username(href="") 
+                a.username(href="/user/" + poster.username) 
                   span.mx-2.link= poster.username
               .posted-on
                 time(datetime=post.createdAt).mr-2= post.createdAt.toLocaleDateString(undefined, { day: 'numeric' , month: 'short' , year: 'numeric'})    

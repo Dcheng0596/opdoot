@@ -18,6 +18,40 @@ body {
       border-color: black !important;
     }
   }
+
+  button{
+    border: none;
+    outline: none;
+    &:active, &:focus {
+      border: none;
+      outline: none;
+    }
+  }
+
+  .thumb-up, .thumb-down{
+    transition: margin-top .1s;
+  
+    &:hover, &:hover{
+      margin-top: -3px;
+    }
+    &:active, &:active{
+      filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
+    }
+  }
+  
+  
+  
+  .upvote {
+    .thumb-up {
+      filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
+    }
+  }
+  
+  .downvote {
+    .thumb-down {
+      filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
+    }
+  }
 }
 
 
@@ -152,34 +186,7 @@ $image-width: 400px;
     border-radius: 50%;
   } 
 
-  button{
-      border: none;
-      outline:none;
-  }
-  .thumb-up, .thumb-down{
-    transition: margin-top .1s;
 
-    &:hover, &:hover{
-      margin-top: -3px;
-    }
-    &:active, &:active{
-      filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
-    }
-  }
-
-  
-
-  .upvote {
-    .thumb-up {
-      filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
-    }
-  }
-
-  .downvote {
-    .thumb-down {
-      filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
-    }
-  }
 
   .username {
     color: black;
@@ -272,6 +279,92 @@ $image-width: 400px;
   .dropdown-item:active {
     background: gainsboro;
     color: black;
+  }
+}
+
+.profile {
+  flex-grow: 1;
+  .banner {
+    height: 250px;
+    margin-bottom: 0 !important;
+  }
+
+  .username {
+    font-size: 2.25rem;
+  }
+  .user-stats {
+    font-size: 1.10rem;
+  }
+
+  .profile-link {
+    color: grey;
+    font-size: 1.10rem;
+    margin: 1rem;
+    font-weight: 500;
+    &:hover {
+      text-decoration: none;
+      color: black;
+    }
+  }
+
+  .post {
+    margin: 0 auto;
+    min-height: 1000px;
+    overflow: hidden;
+
+  }
+
+  .post-image-container {
+    background-color: black;
+  }
+
+  .post-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 50%;
+  }
+
+  .post-container {
+    display: inline-grid;
+    margin: 0 auto;
+    grid-template-columns: repeat(auto-fit, 340px);
+    grid-gap: 14px 9px;
+    width: 1388px;
+  }
+}
+
+#user-post-hidden {
+  display: none !important;
+}
+
+.user-post {
+  color: black;
+  transition: margin-top .2s, margin-bottom .2s;
+  &:hover {
+    color: black;
+    text-decoration: none;
+    margin-top: -10px;
+    margin-bottom: 10px;
+    position: relative;
+  }
+}
+
+@media only screen and (max-width: 1450px) {
+  .post-container {
+    width: 1040px !important;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  .post-container {
+    width: 700px !important;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .post-container {
+    width: 340px !important;
   }
 }
 
