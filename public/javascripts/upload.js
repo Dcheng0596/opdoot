@@ -104,7 +104,7 @@ input.addEventListener("change", function() {
         submit.setAttribute("disabled", "disabled");
         return
     }
-    if(file.type == "image/jpeg" || file.type == "image/png" ||
+    if((file.type == "image/jpeg" || file.type == "image/png") &&
        file.size <= maxFileSize) {
         showSpinner();
         handleImageUpload(file);
@@ -166,8 +166,6 @@ async function handleImageUpload(file) {
     submit.disabled = true;
 
     const imageFile = file;
-    console.log('originalFile instanceof Blob', imageFile instanceof Blob); // true
-    console.log(`originalFile size ${imageFile.size / 1024 / 1024} MB`);
    
     const options = {
       maxSizeMB: 10,

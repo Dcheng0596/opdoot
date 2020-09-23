@@ -23,7 +23,7 @@ mixin navbar()
           ul.navbar-nav.ml-auto
             li.nav-item.dropdown
               a#navbarDropdown.nav-link(href='#' role='button' data-toggle='dropdown' aria-haspopup='true' aria-expanded='false')
-                img.profile-picture(src=user.profilePicture, alt=user.username)
+                img.profile-picture(src=user.profilePicture, alt=user.username width="40" height="40")
               .dropdown-menu.dropdown-menu-right.shadow-sm(aria-labelledby='navbarDropdown')
                 a.dropdown-item(href='/logout') Log Out
         else

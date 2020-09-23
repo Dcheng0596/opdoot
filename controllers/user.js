@@ -7,6 +7,10 @@ const setupPassport = require('../middleware/passport/setup')(passport);
 const {isEmpty} = require('lodash');
 const { validateUser } = require('../helper/validate');
 const { validateEmail, validateUsername, validatePassword } = require('../helper/ajax-validate');
+const  { S3_BUCKET_URL, S3_BUCKET_NAME } = require('../config/amazon.js');
+const { upload_profile_picture, s3 } = require('../middleware/multer-s3');
+const upvoteId = 1;
+const downvoteId = 2;
 
 exports.get_signup = function(req, res, next) {
     res.render('user/signup', { title: 'Sign up | Opdoot', formData: {}, errors: req.flash('error')});
@@ -160,6 +164,29 @@ exports.get_post = async function(req, res, next) {
             offset: req.query.offset,
             limit: req.query.limit
         });
+        for(let i = 0; i < posts.length; i++) {
+            let user = req.user;
+            posts[i] = posts[i].toJSON();
+
+            if(!user) {
+                break;
+            };
+            user.id == posts[i].UserId ? posts[i].isUsers = true : posts[i].isUsers = false; 
+            let postOpdoot = await models.PostOpdoot.findOne({
+                where: { UserId: user.id, PostId: posts[i].id}
+            })
+            if(postOpdoot == null || postOpdoot.OpdootTypeId == null) {
+                continue;
+            }
+            if(postOpdoot.OpdootTypeId == upvoteId) {
+                posts[i].vote = "upvote"
+                continue;
+            }
+            if(postOpdoot.OpdootTypeId == downvoteId) {
+                posts[i].vote = "downvote"
+                continue;
+            }
+        }
 
         res.json({
             posts: posts
@@ -183,8 +210,12 @@ exports.get_opdoots = async function(req, res, next) {
         let posts = await user.getPostOpdoots({
             offset: req.query.offset,
             limit: req.query.limit,
+            through: {
+                where: {
+                    OpdootTypeId: 1
+                }
+            }
         });
-        console.log(posts[0].toJSON());
         res.json({
             posts: posts
         })
@@ -194,4 +225,61 @@ exports.get_opdoots = async function(req, res, next) {
             status: "error"
         })
     }
+}
+
+exports.get_about = async function(req, res, next) {
+    try {
+        let user = req.user;
+        let profile = await models.User.findOne({
+            where: sequelize.where(
+                sequelize.fn('lower', sequelize.col('username')), 
+                sequelize.fn('lower', req.params.username)
+            )
+        })
+        if(!profile) {
+            throw new Error("User does not exist");
+        }
+
+        res.render('user/about', { 
+            user: user,
+            profile: profile
+        });
+    } catch (error) {
+        console.log(error);
+        res.render('404')
+    }
+}
+
+exports.put_profile_picture = function(req, res, next) {
+    upload_profile_picture.single('file')(req, res, async function(err) {
+        if(err) {
+            res.status(500);
+            res.render('error');
+            return;
+        }
+        if(!req.user) {
+            throw new Error("User does not exist");
+        }
+        try {
+            let user = req.user;
+            let oldPic = user.profilePicture;
+            user.profilePicture = S3_BUCKET_URL + "/" + req.file.key;
+            await user.save();
+            if(oldPic != S3_BUCKET_URL + "/users/default-user-image.jpg") {
+                s3.deleteObject({
+                    Bucket: S3_BUCKET_NAME,
+                    Key: oldPic.replace(S3_BUCKET_URL + "/", '')
+                }, function(err, data) {
+                    if(err) {
+                        console.log(err, err.stack);
+                        throw err
+                    }
+                })
+            }
+            res.send("success")
+        } catch (error) {
+            console.log(error);
+            res.send("error")
+        }
+    })
 }

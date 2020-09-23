@@ -11,24 +11,33 @@ html(lang='en')
       .profile.shadow.bg-white.my-2
         .banner.jumbotron.bg-dark
           .user.d-flex.flex-wrap
-            img.profile-picture.rounded-circle(src=profile.profilePicture alt=profile.username width="110" height="110" title=profile.username)
+            if user
+              img.profile-picture.rounded-circle(src=profile.profilePicture alt=profile.username width="110" height="110" title=profile.username)
+              .change-avatar.position-absolute.rounded-circle.text-center.align-middle.text-white.font-weight-bold
+                <svg width="32" height="32" viewBox="0 0 16 16" class="bi bi-pencil-square" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                </svg>
+              input#avatar-file(type="file", name="avatar").position-absolute.rounded-circle
+            else 
+              img.profile-picture.rounded-circle(src=profile.profilePicture alt=profile.username width="110" height="110" title=profile.username)
             .user-info.mx-3
               .username.align-self-center.font-weight-bold.text-white=profile.username
               .user-stats.d-flex
                 span.views.text-white.mr-3 #{profile.views} Views 
-                span.posts.text-white #{profile.views} Posts
+                span.posts.text-white #{profile.posts} Posts
         .user-bar.d-flex.justify-content-center
           a.profile-link(href="/user/" + profile.username + "/posts") POSTS
           a.profile-link(href="/user/" + profile.username + "/opdoots") OPDOOTS
-          a.profile-link(href="") ABOUT
+          a.profile-link(href="/user/" + profile.username + "/about") ABOUT
         .post.d-flex.flex-column
           .post-container.my-3
-            a#user-post-hidden.shadow.d-flex.flex-column.justify-content-between(href="" style="width: 340px; padding: 20px")
+            #user-post-hidden.shadow.d-flex.flex-column.justify-content-between(href="" style="width: 340px; padding: 20px")
               .post-image-container(style="width: 300px;height: 300px")
                 img.post-image( alt='' )
               span.title.font-weight-bold.my-2
               .post-stat-bar.d-flex.justify-content-between
-                .opdoot-container
+                .opdoot-container(class= user ? "" : "novote")
                   button.button-up.bg-white
                     img.thumb-up(src="/images/opdoot/up.svg" width="20" alt="upvote")
                   span.opdoots.mx-1

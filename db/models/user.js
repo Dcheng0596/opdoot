@@ -45,6 +45,14 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0,
       type: DataTypes.INTEGER
     },
+    posts: {
+      allowNull: false,
+      defaultValue: 0,
+      type: DataTypes.INTEGER
+    },
+    about: {
+      type: DataTypes.STRING,
+    },
     profilePicture: {
       allowNull: false,
       defaultValue: S3_BUCKET_URL + '/' + "users/default-user-image.jpg",

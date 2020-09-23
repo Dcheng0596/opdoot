@@ -34,7 +34,7 @@ main {
 
 nav .profile-picture {
   border-radius: 50%;
-  width: 40px; }
+  object-fit: cover; }
 
 @media only screen and (min-width: 992px) {
   nav {
@@ -110,10 +110,12 @@ nav .profile-picture {
     opacity: 0;
     width: 400px;
     height: 300px;
+    font-size: 0;
     cursor: pointer; }
 
 .post .profile-picture {
-  border-radius: 50%; }
+  border-radius: 50%;
+  object-fit: cover; }
 
 .post .username {
   color: black;
@@ -217,6 +219,21 @@ nav .profile-picture {
     grid-template-columns: repeat(auto-fit, 340px);
     grid-gap: 14px 9px;
     width: 1388px; }
+  .profile .profile-picture {
+    object-fit: cover; }
+  .profile .change-avatar {
+    width: 110px;
+    height: 110px;
+    line-height: 110px;
+    background-color: rgba(0, 0, 0, 0.5);
+    visibility: hidden; }
+  .profile #avatar-file {
+    cursor: pointer;
+    font-size: 0;
+    opacity: 0;
+    width: 110px;
+    height: 110px;
+    color: transparent; }
 
 #user-post-hidden {
   display: none !important; }

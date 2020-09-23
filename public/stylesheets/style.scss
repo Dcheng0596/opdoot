@@ -39,8 +39,6 @@ body {
     }
   }
   
-  
-  
   .upvote {
     .thumb-up {
       filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%);
@@ -64,7 +62,8 @@ main {
 nav {
   .profile-picture {
     border-radius: 50%;
-    width: 40px;
+    object-fit: cover;
+
   }
 }
 
@@ -175,6 +174,7 @@ $image-width: 400px;
     opacity: 0;
     width: $image-width;
     height: $image-height;
+    font-size: 0;
     cursor: pointer; 
   }
 
@@ -184,6 +184,7 @@ $image-width: 400px;
 
   .profile-picture {
     border-radius: 50%;
+    object-fit: cover;
   } 
 
 
@@ -331,6 +332,29 @@ $image-width: 400px;
     grid-template-columns: repeat(auto-fit, 340px);
     grid-gap: 14px 9px;
     width: 1388px;
+  }
+
+  $avatarSize: 110px;
+
+  .profile-picture {
+    object-fit: cover;
+  }
+
+  .change-avatar {
+    width: $avatarSize;
+    height: $avatarSize;
+    line-height: $avatarSize;
+    background-color: rgba($color: black, $alpha: .5);
+    visibility: hidden;
+  }
+  
+  #avatar-file {
+    cursor: pointer;
+    font-size: 0;
+    opacity: 0;
+    width: $avatarSize;
+    height: $avatarSize;
+    color: transparent;
   }
 }
 

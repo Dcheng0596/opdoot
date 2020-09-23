@@ -16,11 +16,11 @@ html(lang='en')
               .username.align-self-center.font-weight-bold.text-white=profile.username
               .user-stats.d-flex
                 span.views.text-white.mr-3 #{profile.views} Views 
-                span.posts.text-white #{profile.views} Posts
+                span.posts.text-white #{profile.posts} Posts
         .user-bar.d-flex.justify-content-center
           a.profile-link(href="/user/" + profile.username + "/posts") POSTS
           a.profile-link(href="/user/" + profile.username + "/opdoots") OPDOOTS
-          a.profile-link(href="") ABOUT
+          a.profile-link(href="/user/" + profile.username + "/about") ABOUT
         .post.d-flex.flex-column
           .post-container.my-3
             a#user-post-hidden.shadow.d-flex.flex-column.justify-content-between(href="" style="width: 340px; padding: 20px")

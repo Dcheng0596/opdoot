@@ -14,7 +14,7 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-const upload = multer({
+const upload_post = multer({
     storage: multerS3({
         s3: s3,
         bucket: S3_BUCKET_NAME,
@@ -27,6 +27,23 @@ const upload = multer({
     })
 })
 
-exports.upload = upload;
+const upload_profile_picture = multer({
+    storage: multerS3({
+        s3: s3,
+        bucket: S3_BUCKET_NAME,
+        acl: 'public-read',
+        contentType: multerS3.AUTO_CONTENT_TYPE,
+        serverSideEncryption: 'AES256',
+        key: function (req, file, cb) {
+          cb(null,'users/' + nanoId.nanoid(idLength))
+        }
+    })
+})
+
+
+
+exports.upload_post = upload_post;
+
+exports.upload_profile_picture = upload_profile_picture;
 
 exports.s3 = s3;

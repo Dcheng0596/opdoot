@@ -38,6 +38,14 @@ module.exports = {
         defaultValue: S3_BUCKET_URL + '/' + "users/default-user-image.jpg",
         type: Sequelize.STRING
       },
+      posts: {
+        allowNull: false,
+        defaultValue: 0,
+        type: Sequelize.INTEGER
+      },
+      about: {
+        type: Sequelize.STRING,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

@@ -1,4 +1,4 @@
-const { upload, s3 } = require('../middleware/multer-s3');
+const { upload_post, s3 } = require('../middleware/multer-s3');
 const  { S3_BUCKET_URL } = require('../config/amazon.js');
 const { processTags } = require('../helper/validate-upload');
 const models = require('../db/models');
@@ -16,7 +16,7 @@ exports.get_upload = function(req, res, next) {
 
 
 exports.post_upload = function(req, res, next) {
-    upload.single('file')(req, res, async function(err) {
+    upload_post.single('file')(req, res, async function(err) {
         if(err) {
             res.status(500);
             res.render('error');
@@ -58,7 +58,9 @@ exports.post_upload = function(req, res, next) {
                 title: req.body.title,
                 description: req.body.description,
             }, { transaction: t });
-            await req.user.addPost(post, { transaction: t});
+            let user = req.user;
+            await user.addPost(post, { transaction: t});
+            await user.increment("posts", { transaction: t});
             for(tag of processTags(req.body.tags)) {
                 let [newTag, created] = await models.Tag.findOrCreate({
                     where: {

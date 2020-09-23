@@ -37,11 +37,12 @@ router.post('/comment/:id/opdoot', post.post_comment_opdoot);
 router.delete('/comment/:id', post.delete_comment);
 
 router.get('/user/:username', viewed, user.get_user)
-router.get('/user/:username/posts', user.get_user)
+router.get('/user/:username/posts', viewed, user.get_user)
 router.get('/user/:username/opdoots', user.get_opdoot)
+router.get('/user/:username/about', user.get_about)
 router.get('/user/:username/post/get', user.get_post)
 router.get('/user/:username/opdoot/get', user.get_opdoots)
-
+router.put('/user/:username/profile_picture', user.put_profile_picture)
 
 
 
