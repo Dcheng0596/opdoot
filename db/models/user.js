@@ -51,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER
     },
     about: {
-      type: DataTypes.STRING,
+      type: DataTypes.CHAR(1000),
     },
     profilePicture: {
       allowNull: false,

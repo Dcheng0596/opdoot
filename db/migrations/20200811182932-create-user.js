@@ -44,7 +44,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       about: {
-        type: Sequelize.STRING,
+        type: Sequelize.CHAR(1000),
       },
       createdAt: {
         allowNull: false,

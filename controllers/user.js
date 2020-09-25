@@ -9,6 +9,7 @@ const { validateUser } = require('../helper/validate');
 const { validateEmail, validateUsername, validatePassword } = require('../helper/ajax-validate');
 const  { S3_BUCKET_URL, S3_BUCKET_NAME } = require('../config/amazon.js');
 const { upload_profile_picture, s3 } = require('../middleware/multer-s3');
+const moment = require('moment');
 const upvoteId = 1;
 const downvoteId = 2;
 
@@ -106,6 +107,13 @@ exports.google_cb = function(req, res, next) {
 exports.get_user = async function(req, res, next) {
     try {
         let user = req.user;
+        let owner = false;
+
+        if(user) {
+            if(user.username == req.params.username) {
+                owner = true;
+            }
+        }
         let profile = await models.User.findOne({
             where: sequelize.where(
                 sequelize.fn('lower', sequelize.col('username')), 
@@ -121,7 +129,9 @@ exports.get_user = async function(req, res, next) {
             }
         }
         res.render('user/post', { 
+            title: profile.username + " | Opdoot",
             user: user,
+            owner: owner,
             profile: profile
         });
     } catch (error) {
@@ -133,6 +143,13 @@ exports.get_user = async function(req, res, next) {
 exports.get_opdoot = async function(req, res, next) {
     try {
         let user = req.user;
+        let owner = false;
+
+        if(user) {
+            if(user.username == req.params.username) {
+                owner = true;
+            }
+        }
         let profile = await models.User.findOne({
             where: sequelize.where(
                 sequelize.fn('lower', sequelize.col('username')), 
@@ -143,7 +160,9 @@ exports.get_opdoot = async function(req, res, next) {
             throw new Error("User does not exist");
         }
         res.render('user/opdoot', { 
+            title: profile.username + " | Opdoot",
             user: user,
+            owner: owner,
             profile: profile
         });
     } catch (error) {
@@ -230,6 +249,13 @@ exports.get_opdoots = async function(req, res, next) {
 exports.get_about = async function(req, res, next) {
     try {
         let user = req.user;
+        let owner = false;
+
+        if(user) {
+            if(user.username == req.params.username) {
+                owner = true;
+            }
+        }
         let profile = await models.User.findOne({
             where: sequelize.where(
                 sequelize.fn('lower', sequelize.col('username')), 
@@ -241,8 +267,11 @@ exports.get_about = async function(req, res, next) {
         }
 
         res.render('user/about', { 
+            title: profile.username + " | Opdoot",
             user: user,
-            profile: profile
+            owner: owner,
+            profile: profile,
+            joined: moment(profile.createdAt).format("MMMM Do YYYY")
         });
     } catch (error) {
         console.log(error);
@@ -252,16 +281,19 @@ exports.get_about = async function(req, res, next) {
 
 exports.put_profile_picture = function(req, res, next) {
     upload_profile_picture.single('file')(req, res, async function(err) {
-        if(err) {
-            res.status(500);
-            res.render('error');
-            return;
-        }
-        if(!req.user) {
-            throw new Error("User does not exist");
-        }
         try {
+            if(err) {
+                res.status(500);
+                res.render('error');
+                return;
+            }
             let user = req.user;
+            if(!user) {
+                throw new Error("User does not exist");
+            }
+            if(user.username == req.params.username) {
+                throw new Error("User does not belong to profile");
+            }
             let oldPic = user.profilePicture;
             user.profilePicture = S3_BUCKET_URL + "/" + req.file.key;
             await user.save();
@@ -282,4 +314,22 @@ exports.put_profile_picture = function(req, res, next) {
             res.send("error")
         }
     })
+}
+
+exports.put_about = async function(req, res, next) {
+    try {
+        let user = req.user;
+        if(!user) {
+            throw new Error("User does not exist");
+        }
+        if(user.username == req.params.username) {
+            throw new Error("User does not belong to profile");
+        }
+        user.about = req.body.about;
+        await user.save();
+        res.send("success")
+    } catch (error) {
+        console.log(error);
+        res.send("error")
+    }
 }

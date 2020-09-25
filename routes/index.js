@@ -43,6 +43,8 @@ router.get('/user/:username/about', user.get_about)
 router.get('/user/:username/post/get', user.get_post)
 router.get('/user/:username/opdoot/get', user.get_opdoots)
 router.put('/user/:username/profile_picture', user.put_profile_picture)
+router.put('/user/:username/about', user.put_about)
+
 
 
 

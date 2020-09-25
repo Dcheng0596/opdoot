@@ -2,6 +2,59 @@ let username = location.pathname.split('/')[2];
 
 let url = 'https://opdootimages.s3.amazonaws.com';
 
+let avatarFile = document.getElementById("avatar-file");
+let changeAvatar = document.querySelector(".change-avatar");
+if(avatarFile) {
+    avatarFile.setAttribute("title", " ");
+    avatarFile.addEventListener("mouseover", function() {
+        changeAvatar.style.visibility = "visible";
+    })
+    avatarFile.addEventListener("mouseleave", function() {
+        changeAvatar.style.visibility = "hidden";
+    })
+    avatarFile.addEventListener("change", async function() {
+        let file = this.files[0];
+        let maxFileSize = 1048576;
+        if(file == null) {
+            return
+        }
+        let spinner = createSpinner();
+        let form = new FormData();
+        
+        spinner.style.position = "absolute";
+        spinner.style.width = "110px";
+        spinner.style.height = "110px"
+        spinner.style.lineHeight = "115px";
+        spinner.style.color = "white";
+
+        document.querySelector(".user").prepend(spinner);
+        changeAvatar.display = "none";
+        if((file.type == "image/jpeg" || file.type == "image/png") &&
+            file.size <= maxFileSize) {
+            form.set("file", file);
+            try {
+                const response =  await fetch("/user/" + username + "/profile_picture", {
+                    method: 'PUT',
+                    body: form
+                });
+                const resText = await response.text();
+                if(resText == "success") {
+                    console.log(document.getElementById(".user .profile-picture"));
+                    let reader = new FileReader();
+                    reader.onload = function(e)  {
+                        document.querySelector(".user .profile-picture").src = e.target.result;    
+                    }
+                    reader.readAsDataURL(file);
+                    spinner.remove();
+                    changeAvatar.display = "block";
+                }
+            } catch (error) {
+                console.log(error)
+            }
+        }    
+    });
+}
+
 function createSpinner() {
     let inner = document.createElement("div");
     inner.classList.add("spinner-border");
@@ -75,7 +128,6 @@ window.onload = function() {
 }
 
 window.onscroll = function() {
-    console.log("w");
     if ((window.innerHeight + window.pageYOffset) >= document.body.offsetHeight) {
         if(!loadedAllPosts) {
             loadedAllPosts = true;
