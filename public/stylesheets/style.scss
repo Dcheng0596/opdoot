@@ -55,7 +55,6 @@ body {
 
 main {
   min-height: calc(100vh - 60px - 60px);
-  margin-top: 60px;
 }
 
 
@@ -307,32 +306,6 @@ $image-width: 400px;
     }
   }
 
-  .post {
-    margin: 0 auto;
-    min-height: 1000px;
-    overflow: hidden;
-
-  }
-
-  .post-image-container {
-    background-color: black;
-  }
-
-  .post-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 50%;
-  }
-
-  .post-container {
-    display: inline-grid;
-    margin: 0 auto;
-    grid-template-columns: repeat(auto-fit, 340px);
-    grid-gap: 14px 9px;
-    width: 1388px;
-  }
-
   $avatarSize: 110px;
 
   .profile-picture {
@@ -355,6 +328,30 @@ $image-width: 400px;
     height: $avatarSize;
     
   }
+}
+
+.post {
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.post-image-container {
+  background-color: black;
+}
+
+.post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+}
+
+.post-container {
+  display: inline-grid;
+  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, 340px);
+  grid-gap: 14px 9px;
+  width: 1388px;
 }
 
 #user-post-hidden {
@@ -408,6 +405,11 @@ $image-width: 400px;
   }
 }
 
+.index {
+  .post-container {
+    min-height: 382px;
+  }
+}
 
 footer {
   height: 60px;

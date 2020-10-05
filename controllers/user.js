@@ -177,11 +177,14 @@ exports.get_post = async function(req, res, next) {
             where: sequelize.where(
                 sequelize.fn('lower', sequelize.col('username')), 
                 sequelize.fn('lower', req.params.username)
-            )
+            ),
         })
         let posts = await user.getPosts({
             offset: req.query.offset,
-            limit: req.query.limit
+            limit: req.query.limit,
+            order: [
+                ['createdAt', 'DESC']
+            ]
         });
         for(let i = 0; i < posts.length; i++) {
             let user = req.user;
@@ -229,6 +232,9 @@ exports.get_opdoots = async function(req, res, next) {
         let posts = await user.getPostOpdoots({
             offset: req.query.offset,
             limit: req.query.limit,
+            order: [
+                ['updatedAt', 'DESC']
+            ],
             through: {
                 where: {
                     OpdootTypeId: 1

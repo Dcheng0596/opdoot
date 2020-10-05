@@ -1,0 +1,153 @@
+let url = 'https://opdootimages.s3.amazonaws.com';
+
+async function fetchOpdoot(vote, post) {
+    try {
+        let body = {
+            vote: vote
+        }
+        const response =  await fetch("/post/" + post + "/opdoot"
+        , {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(body)
+        });
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+function opdoot(post, postId) {
+    let upvote = post.querySelector(".thumb-up");
+    let downvote = post.querySelector(".thumb-down");
+    let opdootContainer = post.querySelector(".opdoot-container");
+    let opdoots =  post.querySelector(".opdoots");
+
+    upvote.addEventListener("click", function(e) {
+        e.stopPropagation();
+        if(opdootContainer.classList.contains("novote")){
+            location.href = '/login'
+            return;
+        }
+        if(opdootContainer.classList.contains("upvote")) {
+            opdootContainer.classList.remove("upvote");
+            opdoots.innerText = parseInt(opdoots.innerText) - 1;
+        } else if(opdootContainer.classList.contains("downvote")) {
+            opdootContainer.classList.remove("downvote");
+            opdootContainer.classList.add("upvote");
+            opdoots.innerText = parseInt(opdoots.innerText) + 2;
+        } else {
+            opdootContainer.classList.add("upvote");
+            opdoots.innerText = parseInt(opdoots.innerText) + 1;
+        }
+        fetchOpdoot("upvote", postId);
+    });
+    
+    downvote.addEventListener("click", function(e) {
+        e.stopPropagation();
+        if(opdootContainer.classList.contains("novote")){
+            location.href = '/login'
+            return;
+        }
+        if(opdootContainer.classList.contains("downvote")) {
+            opdootContainer.classList.remove("downvote");
+            opdoots.innerText = parseInt(opdoots.innerText) + 1;
+        } else if(opdootContainer.classList.contains("upvote")) {
+            opdootContainer.classList.remove("upvote");
+            opdootContainer.classList.add("downvote");
+            opdoots.innerText = parseInt(opdoots.innerText) - 2;
+        } else {
+            opdootContainer.classList.add("downvote");
+            opdoots.innerText = parseInt(opdoots.innerText) - 1;
+        }
+        fetchOpdoot("downvote", postId);
+    });
+}
+
+
+function createSpinner() {
+    let inner = document.createElement("div");
+    inner.classList.add("spinner-border");
+    let spinner = document.createElement("div");
+    spinner.append(inner);
+    spinner.classList.add("text-center");
+    
+    return spinner;
+}
+
+async function fetchPosts(limit, dir) {
+    try {
+        const response =  await fetch("/random_post?limit=" + limit, {
+            method: 'GET',
+        });
+        let posts = await response.json();
+        if(posts.status) {
+            return null;
+        }
+        return posts.posts;
+    } catch (error) {
+        console.log(error)
+        return null;
+    }
+}
+
+function createPost(model) {
+    let post = document.querySelector("#user-post-hidden").cloneNode(true);
+    let image = post.querySelector(".post-image");
+
+    post.addEventListener("click", function(e) {
+        location.href = '/post/' + model.file;
+    })
+    post.style.cursor = "pointer";
+    post.removeAttribute("id");
+    post.classList.add("user-post");
+    post.setAttribute("href", "/post/" + model.file);
+    image.src = url + "/" + model.file;
+    post.querySelector(".title").innerText = model.title;
+    post.querySelector(".opdoots").innerText = model.opdoots;
+    post.querySelector(".opdoot-container").classList.add(model.vote);
+    post.querySelector(".comment-amount").innerText = model.comments;
+    post.querySelector(".view-amount").innerText = model.views;
+    opdoot(post, model.file);
+
+    return post;
+}
+
+let loadedAllPosts = true;
+let limit = 2;
+
+async function loadPosts(limit) {
+    let spinner = createSpinner();
+    let postArea = document.querySelector(".post");
+
+    let postContainer = postArea.querySelector(".post-container");
+    postContainer.append(spinner);
+
+    let posts = await fetchPosts(limit);
+    for(post of posts) {
+        postContainer.appendChild(createPost(post));
+    }
+    spinner.remove();
+    if(posts.length < limit) {
+        return;
+    }
+    loadedAllPosts = false;
+
+}
+
+function nextButton() {
+    document.querySelector(".next").addEventListener("click", function() {
+        document.querySelectorAll(".user-post").forEach((post) => {
+            post.remove();
+        })
+        loadPosts(limit);
+    })
+}
+
+
+window.onload = function() {
+    loadPosts(limit);
+    nextButton();
+}

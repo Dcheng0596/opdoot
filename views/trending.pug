@@ -8,10 +8,9 @@ html(lang='en')
   body.bg-light
     +navbar()
     main.container.index.py-5
-      .display-4.text-center.mb-4 Choose One
-      .post
-        .post-container.d-flex.justify-content-center.my-3
-          #user-post-hidden.shadow.d-flex.flex-column.justify-content-between.bg-white.mx-5(href="" style="width: 340px; padding: 20px")
+      .post.d-flex.flex-column
+        .post-container.my-3
+          #user-post-hidden.shadow.d-flex.flex-column.justify-content-between.bg-white(href="" style="width: 340px; padding: 20px")
             .post-image-container(style="width: 300px;height: 300px")
               img.post-image( alt='' )
             span.title.font-weight-bold.my-2
@@ -28,6 +27,4 @@ html(lang='en')
               .view
                 img(src="/images/post/view.svg", alt="views" width="20")
                 span.view-amount.ml-2
-        .text-center
-          button.m-2.next.btn.btn-primary Next
-    +footer("index")
+    +footer("trending")

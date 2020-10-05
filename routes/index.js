@@ -8,6 +8,11 @@ let post = require('../controllers/post');
 const viewed = require('../middleware/viewed');
 
 router.get('/', index.get_index);
+router.get('/random_post', index.get_random_post);
+router.get('/trending', index.get_trending);
+router.get('/trending_post', index.get_trending_post);
+
+
 
 router.get('/signup', user.get_signup);
 router.post('/signup', user.post_signup);
@@ -44,6 +49,7 @@ router.get('/user/:username/post/get', user.get_post)
 router.get('/user/:username/opdoot/get', user.get_opdoots)
 router.put('/user/:username/profile_picture', user.put_profile_picture)
 router.put('/user/:username/about', user.put_about)
+
 
 
 

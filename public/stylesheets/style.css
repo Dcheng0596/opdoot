@@ -29,8 +29,7 @@ body {
     filter: invert(39%) sepia(93%) saturate(3841%) hue-rotate(191deg) brightness(90%) contrast(98%); }
 
 main {
-  min-height: calc(100vh - 60px - 60px);
-  margin-top: 60px; }
+  min-height: calc(100vh - 60px - 60px); }
 
 nav .profile-picture {
   border-radius: 50%;
@@ -203,23 +202,6 @@ nav .profile-picture {
     .profile .profile-link:hover {
       text-decoration: none;
       color: black; }
-  .profile .post {
-    margin: 0 auto;
-    min-height: 1000px;
-    overflow: hidden; }
-  .profile .post-image-container {
-    background-color: black; }
-  .profile .post-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: 50% 50%; }
-  .profile .post-container {
-    display: inline-grid;
-    margin: 0 auto;
-    grid-template-columns: repeat(auto-fit, 340px);
-    grid-gap: 14px 9px;
-    width: 1388px; }
   .profile .profile-picture {
     object-fit: cover; }
   .profile .change-avatar {
@@ -234,6 +216,26 @@ nav .profile-picture {
     opacity: 0;
     width: 110px;
     height: 110px; }
+
+.post {
+  margin: 0 auto;
+  overflow: hidden; }
+
+.post-image-container {
+  background-color: black; }
+
+.post-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%; }
+
+.post-container {
+  display: inline-grid;
+  margin: 0 auto;
+  grid-template-columns: repeat(auto-fit, 340px);
+  grid-gap: 14px 9px;
+  width: 1388px; }
 
 #user-post-hidden {
   display: none !important; }
@@ -270,6 +272,9 @@ nav .profile-picture {
   .about .edit-about-me {
     width: 100%;
     height: 20rem; }
+
+.index .post-container {
+  min-height: 382px; }
 
 footer {
   height: 60px;
