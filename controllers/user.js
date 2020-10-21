@@ -339,3 +339,160 @@ exports.put_about = async function(req, res, next) {
         res.send("error")
     }
 }
+
+exports.get_settings = async function(req, res, next) {
+    try {
+        let user = req.user;
+        let owner = false;
+
+        if(!user) {
+            throw new Error("User not logged in");
+        }
+
+        let facebook = await user.getFacebook();
+        let google = await user.getGoogle();
+        let nullPassword = false;
+
+        if(user.password == null) {
+            nullPassword = true;
+        }
+
+        res.render('user/settings', { 
+            title: "Settings | Opdoot",
+            user: user,
+            facebook: facebook,
+            google: google,
+            nullPassword: nullPassword
+        });
+    } catch (error) {
+        console.log(error);
+        res.redirect('/')
+    }
+}
+
+exports.post_change_username = async function(req, res, next) {
+    try {
+        let user = req.user;
+        
+        if(!user) {
+            throw new Error("User not logged in");
+        }
+        
+        let username = req.body.username;
+        let password = req.body.password;
+        let errors = {};
+
+        await validateUsername(errors, username);
+
+        if(!isEmpty(errors)) {
+            throw new Error(errors.username);
+        }
+
+        if(!bcrypt.compareSync(password, user.password)) {
+            throw new Error("Password is incorrect");
+        }
+
+        user.username = username;
+        await user.save()
+        res.send("success")
+
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}
+
+exports.post_change_email = async function(req, res, next) {
+    try {
+        let user = req.user;
+        
+        if(!user) {
+            throw new Error("User not logged in");
+        }
+        
+        let email = req.body.email;
+        let password = req.body.password;
+        let errors = {};
+
+        await validateEmail(errors, email);
+
+        if(!isEmpty(errors)) {
+            throw new Error(errors.email);
+        }
+
+        if(!bcrypt.compareSync(password, user.password)) {
+            throw new Error("Password is incorrect");
+        }
+
+        user.email = email;
+        await user.save()
+        res.send("success")
+
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}
+
+exports.post_change_password = async function(req, res, next) {
+    try {
+        let user = req.user;
+        
+        if(!user) {
+            throw new Error("User not logged in");
+        }
+        
+        let newPassword = req.body.newPassword;
+        let password = req.body.password;
+        let errors = {};
+
+        validatePassword(errors, newPassword);
+
+        if(!isEmpty(errors)) {
+            throw new Error(errors.password);
+        }
+
+        if(!bcrypt.compareSync(password, user.password)) {
+            throw new Error("Password is incorrect");
+        }
+
+        user.password = bcrypt.hashSync(newPassword, bcrypt.genSaltSync(), null);
+        await user.save()
+        res.send("success")
+
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}
+
+exports.post_set_password = async function(req, res, next) {
+    try {
+        let user = req.user;
+        
+        if(!user) {
+            throw new Error("User not logged in");
+        }
+
+        if(user.password != null) {
+            throw new Error("Password already set");
+        }
+        
+        let password = req.body.password;
+        let errors = {};
+
+        validatePassword(errors, password);
+
+        if(!isEmpty(errors)) {
+            throw new Error(errors.password);
+        }
+
+        user.password = bcrypt.hashSync(password, bcrypt.genSaltSync(), null);
+        await user.save()
+        res.send("success")
+
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}

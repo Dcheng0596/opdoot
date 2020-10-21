@@ -50,16 +50,18 @@ nav .profile-picture {
 
 .signup {
   width: 25rem; }
-  .signup .success {
-    border-color: lightgreen !important; }
-    .signup .success:focus {
-      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px lightgreen !important; }
-  .signup .error {
-    border-color: lightcoral !important; }
-    .signup .error:focus {
-      box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px lightcoral !important; }
   .signup .social {
     filter: drop-shadow(1px 1px 1px #EDEDED) drop-shadow(-1px 1px 1px #EDEDED) drop-shadow(1px -1px 1px #EDEDED) drop-shadow(-1px -1px 1px #EDEDED); }
+
+.signup .success, .settings .success {
+  border-color: lightgreen !important; }
+  .signup .success:focus, .settings .success:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px lightgreen !important; }
+
+.signup .error, .settings .error {
+  border-color: lightcoral !important; }
+  .signup .error:focus, .settings .error:focus {
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px lightcoral !important; }
 
 .upload {
   width: 25rem; }
@@ -275,6 +277,9 @@ nav .profile-picture {
 
 .index .post-container {
   min-height: 382px; }
+
+.settings {
+  max-width: 720px; }
 
 footer {
   height: 60px;

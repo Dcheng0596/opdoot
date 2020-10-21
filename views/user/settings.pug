@@ -1,0 +1,94 @@
+include ../common/head.pug
+include ../common/navbar.pug
+include ../common/footer.pug
+
+doctype html
+html(lang='en')
+  +head(title)
+  body.bg-light
+    +navbar()
+    main.container.settings
+      div.display-4.my-4.pb-4.border-bottom Account Settings
+      .settings
+        .d-flex.justify-content-between.my-5
+          div.d-flex
+            .mr-3.font-weight-bold Username
+            span= user.username
+          if nullPassword
+            button.show-password-modal.btn.btn-primary(data-toggle="modal" data-target="#set-password-modal") Change
+          else
+            button.show-password-modal.btn.btn-primary(data-toggle="modal" data-target="#change-username-modal") Change
+        .d-flex.justify-content-between.my-5
+          div.d-flex
+            .mr-3.font-weight-bold Email
+            span= user.email
+          if nullPassword
+            button.show-email-modal.btn.btn-primary(data-toggle="modal" data-target="#set-password-modal") Change
+          else
+            button.show-email-modal.btn.btn-primary(data-toggle="modal" data-target="#change-email-modal") Change
+        .d-flex.justify-content-between.my-5.pb-4.border-bottom
+          div
+            div.font-weight-bold Change Password
+          if nullPassword
+            button.show-password-modal.btn.btn-primary(data-toggle="modal" data-target="#set-password-modal") Change
+          else
+            button.show-password-modal.btn.btn-primary(data-toggle="modal" data-target="#change-password-modal") Change
+      #change-email-modal.modal.fade.shadow-lg(tabindex='-1' role='dialog' aria-labelledby='changeEmailModal' aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+          .modal-content
+            .modal-header
+              h5.modal-title Change Email
+              button.close(type='button' data-dismiss='modal' aria-label='Close')
+            .modal-body
+              label(for="email") New Email
+              input.form-control(type="email", name="email")
+              p#email-error.small.text-danger.text-left
+              label(for="password") Password
+              input.form-control(type="password", name="password")
+            .modal-footer
+              button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+              button#change-email.btn.btn-primary(type='submit') Change
+      #change-password-modal.modal.fade.shadow-lg(tabindex='-1' role='dialog' aria-labelledby='changePasswordModal' aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+          .modal-content
+            .modal-header
+              h5.modal-title Change Password
+              button.close(type='button' data-dismiss='modal' aria-label='Close')
+            .modal-body
+              label(for="newPassword") New Password
+              input.form-control(type="password", name="newPassword")
+              p#newPassword-error.small.text-danger.text-left
+              label(for="password") Old Password
+              input.form-control(type="password", name="password")
+            .modal-footer
+              button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+              button#change-password.btn.btn-primary(type='submit') Change
+      #change-username-modal.modal.fade.shadow-lg(tabindex='-1' role='dialog' aria-labelledby='changeUsernameModal' aria-hidden='true')
+          .modal-dialog.modal-dialog-centered(role='document')
+            .modal-content
+              .modal-header
+                h5.modal-title Change Username
+                button.close(type='button' data-dismiss='modal' aria-label='Close')
+              .modal-body
+                label(for="username") New Username
+                input(placeholder="Username" name='username', type='text').form-control.bg-light
+                p#username-error.small.text-danger.text-left
+                label(for="password") Password
+                input#password(placeholder="Password" autocomplete="off" name='password', type='password').form-control.bg-light
+              .modal-footer
+                button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+                button#change-username.btn.btn-primary(type='submit') Change
+      #set-password-modal.modal.fade.shadow-lg(tabindex='-1' role='dialog' aria-labelledby='setPasswordModal' aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+          .modal-content
+            .modal-header
+              h5.modal-title Set Password
+              button.close(type='button' data-dismiss='modal' aria-label='Close')
+            .modal-body
+              label(for="password") Password
+              input.form-control(type="password", name="password")
+              p#setPassword-error.small.text-danger.text-left
+            .modal-footer
+              button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+              button#change-password.btn.btn-primary(type='submit') Set   
+    +footer("settings")

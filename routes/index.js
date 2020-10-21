@@ -12,10 +12,14 @@ router.get('/random_post', index.get_random_post);
 router.get('/trending', index.get_trending);
 router.get('/trending_post', index.get_trending_post);
 
-
-
 router.get('/signup', user.get_signup);
 router.post('/signup', user.post_signup);
+router.get('/settings', user.get_settings);
+
+router.post('/change_username', user.post_change_username);
+router.post('/change_email', user.post_change_email);
+router.post('/change_password', user.post_change_password);
+router.post('/set_password', user.post_set_password);
 
 router.post('/signup_ajax/email', user.validate_email);
 router.post('/signup_ajax/username', user.validate_username);
