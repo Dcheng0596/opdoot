@@ -1,0 +1,1 @@
+let password = modal.querySelector("input[type='search']");

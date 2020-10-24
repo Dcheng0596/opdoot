@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Facebook.belongsTo(models.User);
+      Facebook.belongsTo(models.User, { onDelete: 'CASCADE' });
     }
   };
   Facebook.init({

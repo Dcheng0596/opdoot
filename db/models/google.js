@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Google.belongsTo(models.User);
+      Google.belongsTo(models.User, { onDelete: 'CASCADE' });
     }
   };
   Google.init({

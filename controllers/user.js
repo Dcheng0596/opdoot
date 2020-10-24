@@ -496,3 +496,28 @@ exports.post_set_password = async function(req, res, next) {
         res.send(error)
     }
 }
+
+exports.delete_account = async function(req, res, next) {
+    try {
+        console.log("ASDADASD");
+        let user = req.user;
+        
+        if(!user) {
+            throw new Error("User not logged in");
+        }
+
+        let password = req.body.password;
+        
+        if(!bcrypt.compareSync(password, user.password)) {
+            throw new Error("Password is incorrect");
+        }
+
+        await user.destroy();
+        req.logout();
+        res.send("success")
+
+    } catch (error) {
+        console.log(error);
+        res.send(error)
+    }
+}

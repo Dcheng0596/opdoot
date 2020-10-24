@@ -33,6 +33,13 @@ html(lang='en')
             button.show-password-modal.btn.btn-primary(data-toggle="modal" data-target="#set-password-modal") Change
           else
             button.show-password-modal.btn.btn-primary(data-toggle="modal" data-target="#change-password-modal") Change
+        .d-flex.justify-content-between.my-5.pb-4.border-bottom
+          div
+            div.font-weight-bold Delete Account
+          if nullPassword
+            button.show-delete-account-modal.btn.btn-primary(data-toggle="modal" data-target="#set-password-modal") Delete
+          else
+            button.show-delete-account-modal.btn.btn-primary(data-toggle="modal" data-target="#delete-account-modal") Delete
       #change-email-modal.modal.fade.shadow-lg(tabindex='-1' role='dialog' aria-labelledby='changeEmailModal' aria-hidden='true')
         .modal-dialog.modal-dialog-centered(role='document')
           .modal-content
@@ -90,5 +97,20 @@ html(lang='en')
               p#setPassword-error.small.text-danger.text-left
             .modal-footer
               button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
-              button#change-password.btn.btn-primary(type='submit') Set   
+              button#change-password.btn.btn-primary(type='submit') Set
+      #delete-account-modal.modal.fade.shadow-lg(tabindex='-1' role='dialog' aria-labelledby='deleteAccountModal' aria-hidden='true')
+        .modal-dialog.modal-dialog-centered(role='document')
+          .modal-content
+            .modal-header
+              h5.modal-title Delete Account
+              button.close(type='button' data-dismiss='modal' aria-label='Close')
+            .modal-body
+              p Are you sure you want to delete your account?
+              p It will be deleted permanently
+              label(for="password") Password
+              input.form-control(type="password", name="password")
+              p#delete-account-error.small.text-danger.text-left
+            .modal-footer
+              button.btn.btn-secondary(type='button' data-dismiss='modal') Cancel
+              button#delete-account.btn.btn-primary(type='submit') Delete  
     +footer("settings")

@@ -185,12 +185,47 @@ function setPassword() {
                 let usernameModal = document.getElementById("show-username-modal");
                 let emailModal = document.getElementById("show-email-modal");
                 let passwordModal = document.getElementById("show-password-modal");
+                let deleteAccountModal = document.getElementById("show-delete-account-modal");
 
                 usernameModal.setAttribute("data-target", "change-username-modal");
                 emailModal.setAttribute("data-target", "change-email-modal");
                 passwordModal.setAttribute("data-target", "change-password-modal");
+                passwordModal.setAttribute("data-target", "delete-account-modal");
+
             }
             
+        } catch (error) {
+            console.log(error)
+        }
+    });
+}
+
+function deleteAccount() {
+    let modal = document.getElementById("delete-account-modal");
+    let submit = modal.querySelector("button[type='submit']");
+    let password = modal.querySelector("input[name='password']");
+
+    submit.setAttribute("disabled", "disabled");
+    password.addEventListener("input", function() {
+        if(this.value != "") {
+            submit.removeAttribute("disabled");
+        } else {
+            submit.setAttribute("disabled", "disabled");
+        }
+    });
+
+    submit.addEventListener("click", async function() {
+        try {
+            let body = {
+                password: password.value
+            }
+            const response =  await fetch('/delete_account', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });  
         } catch (error) {
             console.log(error)
         }
@@ -202,3 +237,4 @@ changeUsername();
 changeEmail();
 changePassword();
 setPassword();
+deleteAccount();
