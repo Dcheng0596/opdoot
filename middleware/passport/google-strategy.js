@@ -14,7 +14,7 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET } = require('../../config/google'
 module.exports = new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbackURL: "http://localhost:3000/auth/google/callback",
+    callbackURL: "https://opdoot.com/auth/google/callback",
     profileFields: ['id', 'emails']
   },
   async function(accessToken, refreshToken, profile, cb) {

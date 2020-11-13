@@ -35,6 +35,10 @@ nav .profile-picture {
   border-radius: 50%;
   object-fit: cover; }
 
+nav #results {
+  position: absolute;
+  top: 50px; }
+
 @media only screen and (min-width: 992px) {
   nav {
     height: 60px; }
@@ -286,5 +290,3 @@ footer {
   width: 100%;
   left: 0;
   bottom: 0; }
-
-/*# sourceMappingURL=style.css.map */

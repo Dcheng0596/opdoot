@@ -1,6 +1,6 @@
 let username = location.pathname.split('/')[2];
 
-let url = 'https://opdootimages.s3.amazonaws.com';
+let url = 'https://opdoot.s3.amazonaws.com';
 
 let avatarFile = document.getElementById("avatar-file");
 let changeAvatar = document.querySelector(".change-avatar");

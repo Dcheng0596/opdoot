@@ -14,7 +14,7 @@ const { FACEBOOK_APP_ID, FACEBOOK_APP_SECRET } = require('../../config/facebook'
 module.exports = new FacebookStrategy({
     clientID: FACEBOOK_APP_ID,
     clientSecret: FACEBOOK_APP_SECRET,
-    callbackURL: "http://localhost:3000/auth/facebook/callback",
+    callbackURL: "https://opdoot.com/auth/facebook/callback",
     profileFields: ['id', 'emails']
   },
   async function(accessToken, refreshToken, profile, cb) {

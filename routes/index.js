@@ -11,6 +11,11 @@ router.get('/', index.get_index);
 router.get('/random_post', index.get_random_post);
 router.get('/trending', index.get_trending);
 router.get('/trending_post', index.get_trending_post);
+router.get('/search', index.get_search);
+
+router.get('/terms', index.get_terms);
+router.get('/privacy', index.get_privacy);
+
 
 router.get('/signup', user.get_signup);
 router.post('/signup', user.post_signup);

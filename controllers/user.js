@@ -1,7 +1,7 @@
 
 let sequelize = require("sequelize");
 let models = require("../db/models");
-let bcrypt = require("bcrypt");
+let bcrypt = require("bcryptjs");
 const passport = require('passport');
 const setupPassport = require('../middleware/passport/setup')(passport);
 const {isEmpty} = require('lodash');

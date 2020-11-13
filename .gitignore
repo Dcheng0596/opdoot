@@ -1,6 +1,9 @@
 # Config files
 config/
 
+# Elastic beanstalk configs
+.ebextensions
+
 # Logs
 logs
 *.log

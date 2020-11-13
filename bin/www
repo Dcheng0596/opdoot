@@ -4,7 +4,7 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+var app = require('../application');
 var debug = require('debug')('opdoot:server');
 var http = require('http');
 

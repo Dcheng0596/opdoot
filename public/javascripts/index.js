@@ -1,4 +1,4 @@
-let url = 'https://opdootimages.s3.amazonaws.com';
+let url = 'https://opdoot.s3.amazonaws.com';
 
 async function fetchOpdoot(vote, post) {
     try {

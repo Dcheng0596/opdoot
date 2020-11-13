@@ -3,20 +3,25 @@ mixin navbar()
     nav.navbar.navbar-expand-lg.navbar-light.bg-white.font-weight-bold.shadow-sm
       button.navbar-toggler(type='button' data-toggle='collapse' data-target='#navbarSupportedContent' aria-controls='navbarSupportedContent' aria-expanded='false' aria-label='Toggle navigation')
         span.navbar-toggler-icon
-      a.navbar-brand.d-block.mx-auto.mr-lg-3(href='#')
+      a.navbar-brand.d-block.mx-auto.mr-lg-3(href='/')
         img(src='/images/logo.svg' height="36" alt="Logo")
       #navbarSupportedContent.navbar-collapse.collapse.bg-white
-        form.form-inline.my-2.my-lg-0.mr-2
+        form.d-flex.flex-column.form-inline.my-2.my-lg-0.mr-2
           div.input-group.input-group-sm.w-100
             input.form-control(type='search' placeholder='Search...' aria-label='Search')
             div.input-group-append
               button.btn.btn-light.border(type='submit')
                 img.px-2(src='/images/search.svg' alt="Search")
+          #results.shadow-sm.border.bg-white.px-2.pb-2.d-none
+          a.result.d-none
+            .d-flex.mt-2
+              img.profile-picture(width="30" height="30")
+              .username.ml-2
         ul.navbar-nav.mr-2
           if user
             a.nav-link(href='/upload') Post
           li.nav-item
-            a.nav-link(href='#') Opdoot
+            a.nav-link(href='/') Discover
           li.nav-item
             a.nav-link(href='/trending') Trending
         if user

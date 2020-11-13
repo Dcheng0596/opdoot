@@ -53,3 +53,39 @@ exports.get_trending_post = async function(req, res, next) {
         console.log(error);
     }
 }
+
+exports.get_search = async function(req, res, next) {
+    try {
+        let query = req.query.query;
+
+        if(!query) {
+            res.json({
+                results: []
+            })
+        }
+
+        let results = await models.User.findAll({
+            where: {
+                username: {
+                    [sequelize.Op.iLike]: query + "%"
+                }
+            },
+            limit: 5
+        })
+
+        res.json({
+            results: results
+        })
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+exports.get_terms = async function(req, res, next) {
+    res.render('legal/terms', { title: 'Terms and Conditions | Opdoot', user: req.user});
+}
+
+exports.get_privacy = async function(req, res, next) {
+    res.render('legal/privacy', { title: 'Privacy Policy | Opdoot', user: req.user});
+}
+
